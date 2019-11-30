@@ -1,0 +1,3 @@
+[submodule "submodules/aniseed"]
+	path = submodules/aniseed
+	url = https://github.com/Olical/aniseed.git
