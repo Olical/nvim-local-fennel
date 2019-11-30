@@ -1,5 +1,9 @@
 = nvim-local-fennel
 
+____
+Read my post, https://oli.me.uk/neovim-configuration-and-plugins-in-fennel-lisp/[Neovim configuration and plugins in Fennel (Lisp)], to get some more background on Aniseed.
+____
+
 Compile https://github.com/bakpakin/Fennel[Fennel] to Lua for execution by Neovim upon editor startup with the help of https://github.com/Olical/aniseed[Aniseed].
 
 Add some Fennel code such as `(print "Hello, World!")` to a file named `.lnvim.fnl` in your current directory or anywhere above it such as your home directory. A file will be created beside the `.fnl` called `.lnvim.lua` which will be executed upon startup. Files higher up in your directory hierarchy, such as the home directory, will be executed before those found lower down, such as in a project.
