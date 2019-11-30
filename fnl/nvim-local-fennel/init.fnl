@@ -28,7 +28,7 @@
 
 ;; Iterate over all directories from the root to the cwd.
 ;; For every .lnvim.fnl, compile it to .lvim.lua (if required) and execute it.
-;; If a .lua is foud without a .fnl, delete the .lua to clean up.
+;; If a .lua is found without a .fnl, delete the .lua to clean up.
 (let [cwd (cwd)
       dirs (parents cwd)]
   (table.insert dirs cwd)
