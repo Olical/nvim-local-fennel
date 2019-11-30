@@ -32,7 +32,6 @@
 (let [cwd (cwd)
       dirs (parents cwd)]
   (table.insert dirs cwd)
-  (core.pr dirs)
   (core.run!
     (fn [dir]
       (let [src (.. dir "/.lnvim.fnl")
