@@ -1,0 +1,19 @@
+= nvim-local-fennel
+
+Compile https://github.com/bakpakin/Fennel[Fennel] to Lua for execution by Neovim upon editor startup with the help of https://github.com/Olical/aniseed[Aniseed].
+
+Add some Fennel code such as `(print "Hello, World!")` to a file named `.local-nvim.fnl` in your current directory or anywhere above it such as your home directory. A file will be created beside the `.fnl` called `.local-nvim.lua` which will be executed upon startup. Files higher up in your directory hierarchy, such as the home directory, will be executed before those found lower down, such as in a project.
+
+Be sure to git ignore `.local-nvim.fnl` _and_ `.local-nvim.lua` if you don't want to share your local configuration with others. If you do want to share a `.local-nvim.fnl` I'd recommend you ignore the `.lua` file to prevent duplicated changes in git commits.
+
+Aniseed will only re-compile the Fennel code if it's changed since last time you opened Neovim.
+
+== Unlicenced
+
+Find the full http://unlicense.org/[unlicense] in the `UNLICENSE` file, but here's a snippet.
+
+____
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.
+____
