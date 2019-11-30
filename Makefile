@@ -1,13 +1,10 @@
 .PHONY: compile submodules
 
-SRC_FILES := $(basename $(shell find fnl -type f -name "*.fnl" -printf '%P\n'))
-
 compile:
 	rm -rf lua
-	for f in $(SRC_FILES); do \
-		mkdir -p lua/$$(dirname $$f); \
-		submodules/aniseed/submodules/Fennel/fennel --compile fnl/$$f.fnl > lua/$$f.lua; \
-	done
+	nvim -c "set rtp+=submodules/aniseed" \
+		-c "lua require('aniseed.compile').glob('**/*.fnl', 'fnl', 'lua')" \
+		+q
 	ln -s ../../submodules/aniseed/lua/aniseed lua/nvim-local-fennel/aniseed
 
 submodules:
