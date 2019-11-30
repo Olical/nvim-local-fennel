@@ -2,11 +2,11 @@
 
 Compile https://github.com/bakpakin/Fennel[Fennel] to Lua for execution by Neovim upon editor startup with the help of https://github.com/Olical/aniseed[Aniseed].
 
-Add some Fennel code such as `(print "Hello, World!")` to a file named `.local-nvim.fnl` in your current directory or anywhere above it such as your home directory. A file will be created beside the `.fnl` called `.local-nvim.lua` which will be executed upon startup. Files higher up in your directory hierarchy, such as the home directory, will be executed before those found lower down, such as in a project.
+Add some Fennel code such as `(print "Hello, World!")` to a file named `.lnvim.fnl` in your current directory or anywhere above it such as your home directory. A file will be created beside the `.fnl` called `.lnvim.lua` which will be executed upon startup. Files higher up in your directory hierarchy, such as the home directory, will be executed before those found lower down, such as in a project.
 
-Be sure to git ignore `.local-nvim.fnl` _and_ `.local-nvim.lua` if you don't want to share your local configuration with others. If you do want to share a `.local-nvim.fnl` I'd recommend you ignore the `.lua` file to prevent duplicated changes in git commits.
+Be sure to git ignore `.lnvim.fnl` _and_ `.lnvim.lua` if you don't want to share your local configuration with others. If you do want to share a `.lnvim.fnl` I'd recommend you ignore the `.lua` file to prevent duplicated changes in git commits.
 
-Aniseed will only re-compile the Fennel code if it's changed since last time you opened Neovim.
+Aniseed will only re-compile the Fennel code if it's changed since last time you opened Neovim. If you delete the `.lnvim.fnl` file then the `.lnvim.lua` file will be deleted automatically next time you launch Neovim to ensure you don't accidentally leave Lua files laying around.
 
 == Installation
 
@@ -18,6 +18,8 @@ Pin the plugin to a tag then subscribe to new releases through GitHub. I'd hate 
 ----
 Plug 'Olical/nvim-local-fennel', { 'tag': 'v1.0.0' }
 ----
+
+No further steps are required, this plugin has zero configuration, it should _Just Work_™.
 
 == Unlicenced
 
