@@ -8,6 +8,17 @@ Be sure to git ignore `.local-nvim.fnl` _and_ `.local-nvim.lua` if you don't wan
 
 Aniseed will only re-compile the Fennel code if it's changed since last time you opened Neovim.
 
+== Installation
+
+Use your favourite plugin manager, I highly recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one already.
+
+Pin the plugin to a tag then subscribe to new releases through GitHub. I'd hate to accidentally break your entire configuration through a bad release or breaking change. I follow https://semver.org/[semver], any breaking changes will incur a major version bump, breaking changes and upgrade steps will be listed in the release notes.
+
+[source,viml]
+----
+Plug 'Olical/nvim-local-fennel', { 'tag': 'v1.0.0' }
+----
+
 == Unlicenced
 
 Find the full http://unlicense.org/[unlicense] in the `UNLICENSE` file, but here's a snippet.
