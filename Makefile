@@ -1,11 +1,12 @@
 .PHONY: compile deps
 
-compile: deps
+compile:
 	rm -rf lua
 	nvim -c "set rtp+=deps/aniseed" \
 		-c "lua require('aniseed.compile').glob('**/*.fnl', 'fnl', 'lua')" \
 		+q
-	cp -r deps/aniseed/lua/aniseed lua/nvim-local-fennel/aniseed
+	mkdir -p lua/nvim-local-fennel/deps
+	cp -r deps/aniseed/lua/aniseed lua/nvim-local-fennel/deps/aniseed
 
 deps:
 	mkdir -p deps

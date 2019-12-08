@@ -41,5 +41,5 @@ local function _0_(...)
   return core["run!"](_1_, dirs)
 end
 _0_(...)
-              -- (vim.api.nvim_set_option runtimepath (.. (vim.api.nvim_get_option runtimepath) , (vim.api.nvim_call_function getcwd table: 0x41e7dc00)))
+              -- (vim.api.nvim_set_option runtimepath (.. (vim.api.nvim_get_option runtimepath) , (vim.api.nvim_call_function getcwd table: 0x41f58720)))
 return {["aniseed/module"] = "nvim-local-fennel.init"}
