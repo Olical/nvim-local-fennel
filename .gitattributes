@@ -1,0 +1,3 @@
+*.fnl linguist-language=Clojure
+lua/* linguist-generated
+deps/* linguist-vendored
