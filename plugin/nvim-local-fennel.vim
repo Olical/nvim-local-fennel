@@ -1,4 +1,5 @@
-let s:deps = expand('<sfile>:p:h') . "../deps"
-set runtimepath += s:deps
+let s:deps = expand("<sfile>:p:h") . "/../deps"
+let s:original_rtp = &runtimepath
+let &runtimepath .= "," . s:deps
 lua require("nvim-local-fennel")
-set runtimepath -= s:deps
+let &runtimepath = s:original_rtp
