@@ -20,7 +20,7 @@ Pin the plugin to a tag then subscribe to new releases through GitHub. I'd hate 
 
 [source,viml]
 ----
-Plug 'Olical/nvim-local-fennel', { 'tag': 'v1.3.0' }
+Plug 'Olical/nvim-local-fennel', { 'tag': 'v2.0.0' }
 ----
 
 No further steps are required, this plugin has zero configuration, it should _Just Work_™.
