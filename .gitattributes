@@ -1,3 +1,3 @@
-*.fnl linguist-language=Clojure
+*.fnl linguist-language=Lisp
 lua/* linguist-generated
-deps/* linguist-vendored
+lua/aniseed linguist-vendored
