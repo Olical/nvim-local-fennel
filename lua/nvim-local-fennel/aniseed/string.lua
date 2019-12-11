@@ -1,4 +1,4 @@
-local core = require("aniseed.core")
+local core = require("nvim-local-fennel.aniseed.core")
 local function join(...)
   local args = {...}
   local function _0_(...)
@@ -26,4 +26,4 @@ local function join(...)
   end
   return result
 end
-return {["aniseed/module"] = "aniseed.string", join = join}
+return {["aniseed/module"] = "nvim-local-fennel.aniseed.string", join = join}

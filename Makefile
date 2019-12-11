@@ -11,4 +11,5 @@ compile:
 		-c "set rtp+=deps/aniseed" \
 		-c "lua require('aniseed.compile').glob('**/*.fnl', 'fnl', 'lua')" \
 		+q
-	cp -r deps/aniseed/lua/aniseed lua/aniseed
+	cp -r deps/aniseed/lua/aniseed lua/nvim-local-fennel/aniseed
+	find lua/nvim-local-fennel/aniseed -type f -name "*.lua" -exec sed -i 's/"aniseed\./"nvim-local-fennel.aniseed./g' {} \;

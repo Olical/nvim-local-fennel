@@ -1,4 +1,4 @@
-local view = require("aniseed.view")
+local view = require("nvim-local-fennel.aniseed.view")
 local function first(xs)
   if xs then
     return xs[1]
@@ -130,4 +130,4 @@ end
 local function pr(...)
   return print(pr_str(...))
 end
-return {["aniseed/module"] = "aniseed.core", ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, concat = concat, dec = dec, filter = filter, first = first, identity = identity, inc = inc, keys = keys, map = map, pr = pr, reduce = reduce, second = second, slurp = slurp, some = some, spit = spit, vals = vals}
+return {["aniseed/module"] = "nvim-local-fennel.aniseed.core", ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, concat = concat, dec = dec, filter = filter, first = first, identity = identity, inc = inc, keys = keys, map = map, pr = pr, reduce = reduce, second = second, slurp = slurp, some = some, spit = spit, vals = vals}
