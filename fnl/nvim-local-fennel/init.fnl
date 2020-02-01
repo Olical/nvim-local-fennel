@@ -1,6 +1,6 @@
-(local compile (require :aniseed.compile))
-(local nvim (require :aniseed.nvim))
-(local core (require :aniseed.core))
+(local compile (require :nvim-local-fennel.aniseed.compile))
+(local nvim (require :nvim-local-fennel.aniseed.nvim))
+(local core (require :nvim-local-fennel.aniseed.core))
 
 (fn cwd []
   "Current working directory of Neovim."

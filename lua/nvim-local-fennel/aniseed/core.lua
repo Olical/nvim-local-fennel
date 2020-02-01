@@ -1,4 +1,4 @@
-local view = require("aniseed.view")
+local view = require("nvim-local-fennel.aniseed.view")
 local function first(xs)
   if xs then
     return xs[1]
@@ -24,6 +24,10 @@ end
 local function dec(n)
   return (n - 1)
 end
+local function update(tbl, k, f)
+  tbl[k] = f(tbl[k])
+  return tbl
+end
 local function filter(f, xs)
   local result = {}
   for _, x in ipairs(xs) do
@@ -36,7 +40,15 @@ end
 local function map(f, xs)
   local result = {}
   for _, x in ipairs(xs) do
-    table.insert(result, f(x))
+    local mapped = f(x)
+    local function _0_()
+      if (0 == select("#", mapped)) then
+        return nil
+      else
+        return mapped
+      end
+    end
+    table.insert(result, _0_())
   end
   return result
 end
@@ -130,4 +142,4 @@ end
 local function pr(...)
   return print(pr_str(...))
 end
-return {["aniseed/module"] = "aniseed.core", ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, concat = concat, dec = dec, filter = filter, first = first, identity = identity, inc = inc, keys = keys, map = map, pr = pr, reduce = reduce, second = second, slurp = slurp, some = some, spit = spit, vals = vals}
+return {["aniseed/module"] = "nvim-local-fennel.aniseed.core", ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, concat = concat, dec = dec, filter = filter, first = first, identity = identity, inc = inc, keys = keys, map = map, pr = pr, reduce = reduce, second = second, slurp = slurp, some = some, spit = spit, update = update, vals = vals}

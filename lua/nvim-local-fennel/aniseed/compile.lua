@@ -1,7 +1,7 @@
-local core = require("aniseed.core")
-local fs = require("aniseed.fs")
-local nvim = require("aniseed.nvim")
-local fennel = require("aniseed.fennel")
+local core = require("nvim-local-fennel.aniseed.core")
+local fs = require("nvim-local-fennel.aniseed.fs")
+local nvim = require("nvim-local-fennel.aniseed.nvim")
+local fennel = require("nvim-local-fennel.aniseed.fennel")
 local function str(content, opts)
   local function _0_()
     return fennel.compileString(content, opts)
@@ -38,4 +38,4 @@ local function glob(src_expr, src_dir, dest_dir, opts)
   end
   return nil
 end
-return {["aniseed/module"] = "aniseed.compile", file = file, glob = glob, str = str}
+return {["aniseed/module"] = "nvim-local-fennel.aniseed.compile", file = file, glob = glob, str = str}

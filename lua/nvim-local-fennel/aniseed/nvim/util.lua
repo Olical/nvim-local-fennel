@@ -1,4 +1,4 @@
-local nvim = require("aniseed.nvim")
+local nvim = require("nvim-local-fennel.aniseed.nvim")
 local function normal(keys)
   return nvim.ex.silent(("exe \"normal! " .. keys .. "\""))
 end
@@ -29,4 +29,4 @@ local function fn_bridge(viml_name, module, lua_name, opts)
   end
   return nvim.ex.function_((viml_name .. "(...)" .. _1_() .. "\n          " .. _2_() .. " luaeval(\"require('" .. module .. "')['" .. lua_name .. "'](" .. _3_() .. "unpack(_A))\", a:000)\n          endfunction"))
 end
-return {["aniseed/module"] = "aniseed.nvim.util", ["fn-bridge"] = fn_bridge, normal = normal}
+return {["aniseed/module"] = "nvim-local-fennel.aniseed.nvim.util", ["fn-bridge"] = fn_bridge, normal = normal}

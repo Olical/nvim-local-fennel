@@ -1,6 +1,6 @@
-local compile = require("aniseed.compile")
-local nvim = require("aniseed.nvim")
-local core = require("aniseed.core")
+local compile = require("nvim-local-fennel.aniseed.compile")
+local nvim = require("nvim-local-fennel.aniseed.nvim")
+local core = require("nvim-local-fennel.aniseed.core")
 local function cwd()
   return nvim.fn.getcwd()
 end
@@ -41,5 +41,5 @@ local function _0_(...)
   return core["run!"](_1_, dirs)
 end
 _0_(...)
-              -- (vim.api.nvim_set_option runtimepath (.. (vim.api.nvim_get_option runtimepath) , (vim.api.nvim_call_function getcwd table: 0x40ba3488)))
+              -- (vim.api.nvim_set_option runtimepath (.. (vim.api.nvim_get_option runtimepath) , (vim.api.nvim_call_function getcwd table: 0x409af4b0)))
 return {["aniseed/module"] = "nvim-local-fennel.init"}
