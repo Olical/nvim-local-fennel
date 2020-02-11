@@ -1,19 +1,20 @@
-(local compile (require :nvim-local-fennel.aniseed.compile))
-(local nvim (require :nvim-local-fennel.aniseed.nvim))
-(local core (require :nvim-local-fennel.aniseed.core))
+(module nvim-local-fennel.init
+  {require {compile nvim-local-fennel.aniseed.compile
+            nvim nvim-local-fennel.aniseed.nvim
+            core nvim-local-fennel.aniseed.core}})
 
-(fn cwd []
+(defn- cwd []
   "Current working directory of Neovim."
   (nvim.fn.getcwd))
 
-(fn parent [dir]
+(defn- parent [dir]
   "Parent of a directory or nil."
   (let [candidate (nvim.fn.fnamemodify dir ":h")]
     (when (and (not= dir candidate)
                (nvim.fn.isdirectory candidate))
       candidate)))
 
-(fn parents [dir]
+(defn- parents [dir]
   "All parents of a directory."
   (var result [])
   (var dir (parent dir))
@@ -22,7 +23,7 @@
     (set dir (parent dir)))
   result)
 
-(fn file-readable? [path]
+(defn- file-readable? [path]
   "Is the file readable?"
   (= 1 (nvim.fn.filereadable path)))
 
@@ -43,13 +44,3 @@
           (when (file-readable? dest)
             (nvim.fn.delete dest)))))
     dirs))
-
-(comment
-  ;; Add the project directory to rtp for development.
-  (vim.api.nvim_set_option
-    :runtimepath
-    (.. (vim.api.nvim_get_option :runtimepath)
-        ","
-        (vim.api.nvim_call_function :getcwd []))))
-
-{:aniseed/module :nvim-local-fennel.init}

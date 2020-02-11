@@ -1,32 +1,82 @@
-local compile = require("nvim-local-fennel.aniseed.compile")
-local nvim = require("nvim-local-fennel.aniseed.nvim")
-local core = require("nvim-local-fennel.aniseed.core")
-local function cwd()
-  return nvim.fn.getcwd()
-end
-local function parent(dir)
-  local candidate = nvim.fn.fnamemodify(dir, ":h")
-  if ((dir ~= candidate) and nvim.fn.isdirectory(candidate)) then
-    return candidate
+local _0_0 = nil
+do
+  local name_23_0_ = "nvim-local-fennel.init"
+  local loaded_23_0_ = package.loaded[name_23_0_]
+  local module_23_0_ = nil
+  if ("table" == type(loaded_23_0_)) then
+    module_23_0_ = loaded_23_0_
+  else
+    module_23_0_ = {}
   end
+  module_23_0_["aniseed/module"] = name_23_0_
+  module_23_0_["aniseed/locals"] = (module_23_0_["aniseed/locals"] or {})
+  module_23_0_["aniseed/local-fns"] = (module_23_0_["aniseed/local-fns"] or {})
+  package.loaded[name_23_0_] = module_23_0_
+  _0_0 = module_23_0_
 end
-local function parents(dir)
-  local result = {}
-  local dir = parent(dir)
-  while dir do
-    table.insert(result, 1, dir)
-    dir = parent(dir)
+local function _1_(...)
+  _0_0["aniseed/local-fns"] = {require = {compile = "nvim-local-fennel.aniseed.compile", core = "nvim-local-fennel.aniseed.core", nvim = "nvim-local-fennel.aniseed.nvim"}}
+  return {require("nvim-local-fennel.aniseed.core"), require("nvim-local-fennel.aniseed.compile"), require("nvim-local-fennel.aniseed.nvim")}
+end
+local _2_ = _1_(...)
+local core = _2_[1]
+local compile = _2_[2]
+local nvim = _2_[3]
+do local _ = ({nil, _0_0, nil})[2] end
+local cwd = nil
+do
+  local v_23_0_ = nil
+  local function cwd0()
+    return nvim.fn.getcwd()
   end
-  return result
+  v_23_0_ = cwd0
+  _0_0["aniseed/locals"]["cwd"] = v_23_0_
+  cwd = v_23_0_
 end
-local function file_readable_3f(path)
-  return (1 == nvim.fn.filereadable(path))
+local parent = nil
+do
+  local v_23_0_ = nil
+  local function parent0(dir)
+    local candidate = nvim.fn.fnamemodify(dir, ":h")
+    if ((dir ~= candidate) and nvim.fn.isdirectory(candidate)) then
+      return candidate
+    end
+  end
+  v_23_0_ = parent0
+  _0_0["aniseed/locals"]["parent"] = v_23_0_
+  parent = v_23_0_
 end
-local function _0_(...)
-  local cwd = cwd()
-  local dirs = parents(cwd)
-  table.insert(dirs, cwd)
-  local function _1_(dir)
+local parents = nil
+do
+  local v_23_0_ = nil
+  local function parents0(dir)
+    local result = {}
+    local dir0 = parent(dir)
+    while dir0 do
+      table.insert(result, 1, dir0)
+      dir0 = parent(dir0)
+    end
+    return result
+  end
+  v_23_0_ = parents0
+  _0_0["aniseed/locals"]["parents"] = v_23_0_
+  parents = v_23_0_
+end
+local file_readable_3f = nil
+do
+  local v_23_0_ = nil
+  local function file_readable_3f0(path)
+    return (1 == nvim.fn.filereadable(path))
+  end
+  v_23_0_ = file_readable_3f0
+  _0_0["aniseed/locals"]["file-readable?"] = v_23_0_
+  file_readable_3f = v_23_0_
+end
+do
+  local cwd0 = cwd()
+  local dirs = parents(cwd0)
+  table.insert(dirs, cwd0)
+  local function _3_(dir)
     local src = (dir .. "/.lnvim.fnl")
     local dest = (dir .. "/.lnvim.lua")
     if file_readable_3f(src) then
@@ -38,8 +88,5 @@ local function _0_(...)
       end
     end
   end
-  return core["run!"](_1_, dirs)
+  return core["run!"](_3_, dirs)
 end
-_0_(...)
-              -- (vim.api.nvim_set_option runtimepath (.. (vim.api.nvim_get_option runtimepath) , (vim.api.nvim_call_function getcwd table: 0x409af4b0)))
-return {["aniseed/module"] = "nvim-local-fennel.init"}
