@@ -1,10 +1,6 @@
 = nvim-local-fennel
 
-____
-Read my post, https://oli.me.uk/neovim-configuration-and-plugins-in-fennel-lisp/[Neovim configuration and plugins in Fennel (Lisp)], to get some more background on Aniseed.
-____
-
-Compile https://github.com/bakpakin/Fennel[Fennel] to Lua for execution by Neovim upon editor startup with the help of https://github.com/Olical/aniseed[Aniseed].
+Run https://github.com/bakpakin/Fennel[Fennel] inside Neovim on startup with https://github.com/Olical/aniseed[Aniseed].
 
 Add some Fennel code such as `(print "Hello, World!")` to a file named `.lnvim.fnl` in your current directory or anywhere above it such as your home directory. A file will be created beside the `.fnl` called `.lnvim.lua` which will be executed upon startup. Files higher up in your directory hierarchy, such as the home directory, will be executed before those found lower down, such as in a project.
 
@@ -24,6 +20,34 @@ Plug 'Olical/nvim-local-fennel', { 'tag': 'v2.1.0' }
 ----
 
 No further steps are required, this plugin has zero configuration, it should _Just Work_™.
+
+== Access to Aniseed
+
+Aniseed is embedded in this plugin under the `nvim-local-fennel.aniseed.*` module prefix, this means you can use Aniseed's macros and functions in your `.lnvim.fnl` files!
+
+[source,clojure]
+----
+;; .lnvim.fnl
+;; You can give the module any name you want.
+(module local-fennel
+  {require {core nvim-local-fennel.aniseed.core
+            str nvim-local-fennel.aniseed.string
+            nvim nvim-local-fennel.aniseed.nvim}})
+
+;; A hyphen suffix denotes a private function.
+(defn- do-some-things [numbers]
+  (core.pr
+    (nvim.fn.getcwd)
+    (core.map core.inc numbers)
+    {:Hello :Fennel!}))
+
+;; Public value.
+;; You could require this module and access it.
+(def counting [1 2 3])
+
+;; Executed as the file is loaded.
+(do-some-things counting)
+----
 
 == Unlicenced
 
