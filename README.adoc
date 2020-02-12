@@ -10,26 +10,21 @@ Aniseed will only re-compile the Fennel code if it's changed since last time you
 
 == Installation
 
-Use your favourite plugin manager, I highly recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one already.
-
-Pin the plugin to a tag then subscribe to new releases through GitHub. I'd hate to accidentally break your entire configuration through a bad release or breaking change. I follow https://semver.org/[semver], any breaking changes will incur a major version bump, breaking changes and upgrade steps will be listed in the release notes.
+Use your favourite plugin manager, I highly recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one already. Be sure to pin it to a tag and subscribe to releases through GitHub.
 
 [source,viml]
 ----
-Plug 'Olical/nvim-local-fennel', { 'tag': 'v2.1.0' }
+Plug 'Olical/nvim-local-fennel', { 'tag': 'v2.2.0' }
 ----
-
-No further steps are required, this plugin has zero configuration, it should _Just Work_™.
 
 == Access to Aniseed
 
-Aniseed is embedded in this plugin under the `nvim-local-fennel.aniseed.*` module prefix, this means you can use Aniseed's macros and functions in your `.lnvim.fnl` files!
+Aniseed is embedded under the `nvim-local-fennel.aniseed.*` module prefix, this means you can use Aniseed's macros and functions in your `.lnvim.fnl` files!
 
 [source,clojure]
 ----
 ;; .lnvim.fnl
-;; You can give the module any name you want.
-(module local-fennel
+(module my-local-fennel
   {require {core nvim-local-fennel.aniseed.core
             str nvim-local-fennel.aniseed.string
             nvim nvim-local-fennel.aniseed.nvim}})

@@ -1,5 +1,5 @@
 ;; You can give the module any name you want.
-(module local-fennel
+(module my-local-fennel
   {require {core nvim-local-fennel.aniseed.core
             str nvim-local-fennel.aniseed.string
             nvim nvim-local-fennel.aniseed.nvim}})
