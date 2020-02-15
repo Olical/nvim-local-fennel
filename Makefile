@@ -1,7 +1,7 @@
 .PHONY: deps compile
 
 deps:
-	scripts/dep.sh Olical aniseed develop
+	scripts/dep.sh Olical aniseed origin/develop
 
 compile:
 	rm -rf lua
