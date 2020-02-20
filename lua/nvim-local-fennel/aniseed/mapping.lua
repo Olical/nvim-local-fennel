@@ -16,16 +16,16 @@ do
 end
 local function _1_(...)
   _0_0["aniseed/local-fns"] = {require = {core = "nvim-local-fennel.aniseed.core", eval = "nvim-local-fennel.aniseed.eval", fennel = "nvim-local-fennel.aniseed.fennel", nu = "nvim-local-fennel.aniseed.nvim.util", nvim = "nvim-local-fennel.aniseed.nvim", str = "nvim-local-fennel.aniseed.string", test = "nvim-local-fennel.aniseed.test"}}
-  return {require("nvim-local-fennel.aniseed.test"), require("nvim-local-fennel.aniseed.fennel"), require("nvim-local-fennel.aniseed.core"), require("nvim-local-fennel.aniseed.string"), require("nvim-local-fennel.aniseed.nvim"), require("nvim-local-fennel.aniseed.eval"), require("nvim-local-fennel.aniseed.nvim.util")}
+  return {require("nvim-local-fennel.aniseed.core"), require("nvim-local-fennel.aniseed.eval"), require("nvim-local-fennel.aniseed.fennel"), require("nvim-local-fennel.aniseed.nvim.util"), require("nvim-local-fennel.aniseed.nvim"), require("nvim-local-fennel.aniseed.string"), require("nvim-local-fennel.aniseed.test")}
 end
 local _2_ = _1_(...)
-local test = _2_[1]
-local fennel = _2_[2]
-local core = _2_[3]
-local str = _2_[4]
+local core = _2_[1]
+local eval = _2_[2]
+local fennel = _2_[3]
+local nu = _2_[4]
 local nvim = _2_[5]
-local eval = _2_[6]
-local nu = _2_[7]
+local str = _2_[6]
+local test = _2_[7]
 do local _ = ({nil, _0_0, nil})[2] end
 local handle_result = nil
 do
