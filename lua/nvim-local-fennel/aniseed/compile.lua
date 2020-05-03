@@ -15,22 +15,29 @@ do
   _0_0 = module_23_0_
 end
 local function _1_(...)
-  _0_0["aniseed/local-fns"] = {require = {core = "nvim-local-fennel.aniseed.core", fennel = "nvim-local-fennel.aniseed.fennel", fs = "nvim-local-fennel.aniseed.fs", nvim = "nvim-local-fennel.aniseed.nvim"}}
+  _0_0["aniseed/local-fns"] = {require = {a = "nvim-local-fennel.aniseed.core", fennel = "nvim-local-fennel.aniseed.fennel", fs = "nvim-local-fennel.aniseed.fs", nvim = "nvim-local-fennel.aniseed.nvim"}}
   return {require("nvim-local-fennel.aniseed.core"), require("nvim-local-fennel.aniseed.fennel"), require("nvim-local-fennel.aniseed.fs"), require("nvim-local-fennel.aniseed.nvim")}
 end
 local _2_ = _1_(...)
-local core = _2_[1]
+local a = _2_[1]
 local fennel = _2_[2]
 local fs = _2_[3]
 local nvim = _2_[4]
 do local _ = ({nil, _0_0, nil})[2] end
+local function _3_(...)
+  local fnl_suffixes = string.gsub(string.gsub(package.path, "%.lua;", ".fnl;"), "%.lua$", ".fnl")
+  fennel.path = (string.gsub(fnl_suffixes, "/lua/", "/fnl/") .. ";" .. fnl_suffixes)
+  return nil
+end
+_3_(...)
 local macros_prefix = nil
 do
   local v_23_0_ = nil
   do
     local v_23_0_0 = nil
     local function macros_prefix0(code)
-      return ("(require-macros :aniseed.macros)\n" .. code)
+      local macros_module = "nvim-local-fennel.aniseed.macros"
+      return ("(require-macros \"" .. macros_module .. "\")\n" .. code)
     end
     v_23_0_0 = macros_prefix0
     _0_0["macros-prefix"] = v_23_0_0
@@ -45,10 +52,10 @@ do
   do
     local v_23_0_0 = nil
     local function str0(code, opts)
-      local function _3_()
+      local function _4_()
         return fennel.compileString(macros_prefix(code), opts)
       end
-      return xpcall(_3_, fennel.traceback)
+      return xpcall(_4_, fennel.traceback)
     end
     v_23_0_0 = str0
     _0_0["str"] = v_23_0_0
@@ -63,18 +70,18 @@ do
   do
     local v_23_0_0 = nil
     local function file0(src, dest, opts)
-      if ((core["table?"](opts) and opts.force) or (nvim.fn.getftime(src) > nvim.fn.getftime(dest))) then
-        local code = core.slurp(src)
+      if ((a["table?"](opts) and opts.force) or (nvim.fn.getftime(src) > nvim.fn.getftime(dest))) then
+        local code = a.slurp(src)
         do
-          local _3_0, _4_0 = str(code, {filename = src})
-          if ((_3_0 == false) and (nil ~= _4_0)) then
-            local err = _4_0
+          local _4_0, _5_0 = str(code, {filename = src})
+          if ((_4_0 == false) and (nil ~= _5_0)) then
+            local err = _5_0
             return nvim.err_writeln(err)
-          elseif ((_3_0 == true) and (nil ~= _4_0)) then
-            local result = _4_0
+          elseif ((_4_0 == true) and (nil ~= _5_0)) then
+            local result = _5_0
             do
               fs.mkdirp(fs.basename(dest))
-              return core.spit(dest, result)
+              return a.spit(dest, result)
             end
           end
         end
@@ -93,12 +100,12 @@ do
   do
     local v_23_0_0 = nil
     local function glob0(src_expr, src_dir, dest_dir, opts)
-      local src_dir_len = core.inc(string.len(src_dir))
+      local src_dir_len = a.inc(string.len(src_dir))
       local src_paths = nil
-      local function _3_(path)
+      local function _4_(path)
         return string.sub(path, src_dir_len)
       end
-      src_paths = core.map(_3_, nvim.fn.globpath(src_dir, src_expr, true, true))
+      src_paths = a.map(_4_, nvim.fn.globpath(src_dir, src_expr, true, true))
       for _, path in ipairs(src_paths) do
         file((src_dir .. path), string.gsub((dest_dir .. path), ".fnl$", ".lua"), opts)
       end

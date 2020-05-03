@@ -15,12 +15,12 @@ do
   _0_0 = module_23_0_
 end
 local function _1_(...)
-  _0_0["aniseed/local-fns"] = {require = {compile = "nvim-local-fennel.aniseed.compile", core = "nvim-local-fennel.aniseed.core", nvim = "nvim-local-fennel.aniseed.nvim"}}
-  return {require("nvim-local-fennel.aniseed.compile"), require("nvim-local-fennel.aniseed.core"), require("nvim-local-fennel.aniseed.nvim")}
+  _0_0["aniseed/local-fns"] = {require = {a = "nvim-local-fennel.aniseed.core", compile = "nvim-local-fennel.aniseed.compile", nvim = "nvim-local-fennel.aniseed.nvim"}}
+  return {require("nvim-local-fennel.aniseed.core"), require("nvim-local-fennel.aniseed.compile"), require("nvim-local-fennel.aniseed.nvim")}
 end
 local _2_ = _1_(...)
-local compile = _2_[1]
-local core = _2_[2]
+local a = _2_[1]
+local compile = _2_[2]
 local nvim = _2_[3]
 do local _ = ({nil, _0_0, nil})[2] end
 local cwd = nil
@@ -88,5 +88,5 @@ do
       end
     end
   end
-  return core["run!"](_3_, dirs)
+  return a["run!"](_3_, dirs)
 end

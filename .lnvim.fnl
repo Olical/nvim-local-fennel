@@ -1,14 +1,14 @@
 ;; You can give the module any name you want.
 (module my-local-fennel
-  {require {core nvim-local-fennel.aniseed.core
+  {require {a nvim-local-fennel.aniseed.core
             str nvim-local-fennel.aniseed.string
             nvim nvim-local-fennel.aniseed.nvim}})
 
 ;; A hyphen suffix denotes a private function.
 (defn- do-some-things [numbers]
-  (core.pr
+  (a.println
     (nvim.fn.getcwd)
-    (core.map core.inc numbers)
+    (a.map a.inc numbers)
     {:Hello :Fennel!}))
 
 ;; Public value.
