@@ -3,10 +3,6 @@
 
 ;; Automatically loaded through require-macros for all Aniseed based evaluations.
 
-;; TODO Support requiring of more macros.
-;; TODO Let the publicly defined values over the top of private.
-;; This should fix an issue where some top level defs getting set are being lost.
-
 (local module-sym (gensym))
 
 (fn sorted-each [f x]
@@ -37,12 +33,14 @@
 
         ,(let [aliases []
                vals []
+               effects []
                locals (-?> package.loaded
                            (. (tostring name))
                            (. :aniseed/locals))
-               local-fns (or (-?> package.loaded
-                                  (. (tostring name))
-                                  (. :aniseed/local-fns))
+               local-fns (or (and (not new-local-fns)
+                                  (-?> package.loaded
+                                       (. (tostring name))
+                                       (. :aniseed/local-fns)))
                              {})]
 
            (when new-local-fns
@@ -51,14 +49,24 @@
                      current (or (. local-fns action-str) {})]
                  (tset local-fns action-str current)
                  (each [alias module (pairs binds)]
-                   (tset current (tostring alias) (tostring module))))))
+                   (if (= :number (type alias))
+                     (tset current (tostring module) true)
+                     (tset current (tostring alias) (tostring module)))))))
 
            (sorted-each
              (fn [action binds]
                (sorted-each
-                 (fn [alias module]
-                   (table.insert aliases (sym alias))
-                   (table.insert vals `(,(sym action) ,module)))
+                 (fn [alias-or-val val]
+                   (if (= true val)
+
+                     ;; {require-macros [bar]}
+                     (table.insert effects `(,(sym action) ,alias-or-val))
+
+                     ;; {require {foo bar}}
+                     (do
+                       (table.insert aliases (sym alias-or-val))
+                       (table.insert vals `(,(sym action) ,val)))))
+
                  binds))
              local-fns)
 
@@ -69,14 +77,22 @@
                  (table.insert vals `(-> ,module-sym (. :aniseed/locals) (. ,alias))))
                locals))
 
-           `(var ,aliases
-              (do
-                (tset ,module-sym :aniseed/local-fns ,local-fns)
-                ,vals)))]
+           `[,effects
+             (local ,aliases
+               (let [(ok?# val#)
+                     (pcall
+                       (fn [] ,vals))]
+                 (if ok?#
+                   (do
+                     (tset ,module-sym :aniseed/local-fns ,local-fns)
+                     val#)
+                   (print val#))))
+             (local ,(sym "*module*") ,module-sym)
+             (local ,(sym "*module-name*") ,(tostring name))])]
        (. 2)))
 
 (fn def- [name value]
-  `(var ,name
+  `(local ,name
      (let [v# ,value]
        (tset (. ,module-sym :aniseed/locals) ,(tostring name) v#)
        v#)))
@@ -109,8 +125,16 @@
      (tset tests# ,(tostring name) (fn [,(sym :t)] ,...))
      (tset ,module-sym :aniseed/tests tests#)))
 
+(fn time [...]
+  `(let [start# (vim.loop.hrtime)
+         result# (do ,...)
+         end# (vim.loop.hrtime)]
+     (print (.. "Elapsed time: " (/ (- end# start#) 1000000) " msecs"))
+     result#))
+
 {:module module
  :def- def- :def def
  :defn- defn- :defn defn
  :defonce- defonce- :defonce defonce
- :deftest deftest}
+ :deftest deftest
+ :time time}

@@ -15,9 +15,7 @@ do
   long_control_char_escapes = long
 end
 local function escape(str)
-  local str0 = str:gsub("\\", "\\\\")
-  local str1 = str0:gsub("(%c)%f[0-9]", long_control_char_escapes)
-  return str1:gsub("%c", short_control_char_escapes)
+  return str:gsub("\\", "\\\\"):gsub("(%c)%f[0-9]", long_control_char_escapes):gsub("%c", short_control_char_escapes)
 end
 local function sequence_key_3f(k, len)
   return ((type(k) == "number") and (1 <= k) and (k <= len) and (math.floor(k) == k))
@@ -26,7 +24,7 @@ local type_order = {["function"] = 5, boolean = 2, number = 1, string = 3, table
 local function sort_keys(a, b)
   local ta = type(a)
   local tb = type(b)
-  if ((ta == tb) and (ta ~= "boolean") and ((ta == "string") or (ta == "number"))) then
+  if ((ta == tb) and ((ta == "string") or (ta == "number"))) then
     return (a < b)
   else
     local dta = type_order[a]
@@ -68,9 +66,7 @@ local function count_table_appearances(t, appearances)
         count_table_appearances(k, appearances)
         count_table_appearances(v, appearances)
       end
-    end
-  else
-    if (t and (t == t)) then
+    else
       appearances[t] = ((appearances[t] or 0) + 1)
     end
   end
@@ -103,11 +99,14 @@ local function put_sequential_table(self, t, len)
   puts(self, "[")
   self.level = (self.level + 1)
   for i = 1, len do
-    puts(self, " ")
+    local _0_ = (1 + len)
+    if ((1 < i) and (i < _0_)) then
+      puts(self, " ")
+    end
     put_value(self, t[i])
   end
   self.level = (self.level - 1)
-  return puts(self, " ]")
+  return puts(self, "]")
 end
 local function put_key(self, k)
   if ((type(k) == "string") and k:find("^[-%w?\\^_!$%&*+./@:|<=>]+$")) then
@@ -119,8 +118,10 @@ end
 local function put_kv_table(self, t, ordered_keys)
   puts(self, "{")
   self.level = (self.level + 1)
-  for _, k in ipairs(ordered_keys) do
-    tabify(self)
+  for i, k in ipairs(ordered_keys) do
+    if (self["table-edges"] or (i ~= 1)) then
+      tabify(self)
+    end
     put_key(self, k)
     puts(self, " ")
     put_value(self, t[k])
@@ -132,21 +133,48 @@ local function put_kv_table(self, t, ordered_keys)
     put_value(self, v)
   end
   self.level = (self.level - 1)
-  tabify(self)
+  if self["table-edges"] then
+    tabify(self)
+  end
   return puts(self, "}")
 end
 local function put_table(self, t)
+  local metamethod = nil
+  local function _1_()
+    local _0_0 = t
+    if _0_0 then
+      local _2_0 = getmetatable(_0_0)
+      if _2_0 then
+        return _2_0.__fennelview
+      else
+        return _2_0
+      end
+    else
+      return _0_0
+    end
+  end
+  metamethod = (self["metamethod?"] and _1_())
   if (already_visited_3f(self, t) and self["detect-cycles?"]) then
-    return puts(self, "#<table ", get_id(self, t), ">")
+    return puts(self, "#<table @", get_id(self, t), ">")
   elseif (self.level >= self.depth) then
     return puts(self, "{...}")
+  elseif metamethod then
+    return puts(self, metamethod(t, self.fennelview))
   elseif "else" then
     local non_seq_keys, len = get_nonsequential_keys(t)
     local id = get_id(self, t)
     if ((1 < (self.appearances[t] or 0)) and self["detect-cycles?"]) then
-      return puts(self, "#<table", id, ">")
-    elseif ((#non_seq_keys == 0) and (#t == 0)) then
-      return puts(self, "{}")
+      puts(self, "@", id)
+    end
+    if ((#non_seq_keys == 0) and (#t == 0)) then
+      local function _3_()
+        if self["empty-as-square"] then
+          return "[]"
+        else
+          return "{}"
+        end
+      end
+      return puts(self, _3_())
     elseif (#non_seq_keys == 0) then
       return put_sequential_table(self, t, len)
     elseif "else" then
@@ -160,10 +188,21 @@ local function _0_(self, v)
     return puts(self, view_quote(escape(v)))
   elseif ((tv == "number") or (tv == "boolean") or (tv == "nil")) then
     return puts(self, tostring(v))
-  elseif (tv == "table") then
-    return put_table(self, v)
-  elseif "else" then
-    return puts(self, "#<", tostring(v), ">")
+  else
+    local _2_
+    do
+      local _1_0 = getmetatable(v)
+      if _1_0 then
+        _2_ = _1_0.__fennelview
+      else
+        _2_ = _1_0
+      end
+    end
+    if ((tv == "table") or ((tv == "userdata") and (nil ~= _2_))) then
+      return put_table(self, v)
+    elseif "else" then
+      return puts(self, "#<", tostring(v), ">")
+    end
   end
 end
 put_value = _0_
@@ -174,22 +213,23 @@ end
 local function fennelview(x, options)
   local options0 = (options or {})
   local inspector = nil
-  local function _1_()
+  local function _1_(_241)
+    return fennelview(_241, options0)
+  end
+  local function _2_()
     if options0["one-line"] then
       return ""
     else
       return "  "
     end
   end
-  inspector = {["detect-cycles?"] = not (false == options0["detect-cycles?"]), ["max-ids"] = {}, appearances = count_table_appearances(x, {}), buffer = {}, depth = (options0.depth or 128), ids = {}, indent = (options0.indent or _1_()), level = 0}
+  inspector = {["detect-cycles?"] = not (false == options0["detect-cycles?"]), ["empty-as-square"] = options0["empty-as-square"], ["max-ids"] = {}, ["metamethod?"] = not (false == options0["metamethod?"]), ["table-edges"] = (options0["table-edges"] ~= false), appearances = count_table_appearances(x, {}), buffer = {}, depth = (options0.depth or 128), fennelview = _1_, ids = {}, indent = (options0.indent or _2_()), level = 0}
   put_value(inspector, x)
-  do
-    local str = table.concat(inspector.buffer)
-    if options0["one-line"] then
-      return one_line(str)
-    else
-      return str
-    end
+  local str = table.concat(inspector.buffer)
+  if options0["one-line"] then
+    return one_line(str)
+  else
+    return str
   end
 end
 return fennelview
