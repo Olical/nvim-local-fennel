@@ -481,7 +481,7 @@ package.preload["nvim-local-fennel.aniseed.fennel.specials"] = package.preload["
       elseif utils["table?"](arg) then
         local raw = utils.sym(compiler.gensym(scope))
         local declared = compiler["declare-local"](raw, {}, f_scope, ast)
-        compiler.destructure(arg, raw, ast, f_scope, f_chunk, {declaration = true, nomulti = true})
+        compiler.destructure(arg, raw, ast, f_scope, f_chunk, {declaration = true, nomulti = true, symtype = "arg"})
         return declared
       else
         return compiler.assert(false, ("expected symbol for function parameter: %s"):format(tostring(arg)), ast[2])
@@ -528,7 +528,7 @@ package.preload["nvim-local-fennel.aniseed.fennel.specials"] = package.preload["
     local target = utils.deref(ast[2])
     local special_or_macro = (scope.specials[target] or scope.macros[target])
     if special_or_macro then
-      return ("print([[%s]])"):format(doc_2a(special_or_macro, target))
+      return ("print(%q)"):format(doc_2a(special_or_macro, target))
     else
       local value = tostring(compiler.compile1(ast[2], scope, parent, {nval = 1})[1])
       return ("print(require('%s').doc(%s, '%s'))"):format((utils.root.options.moduleName or "fennel"), value, tostring(ast[2]))
@@ -565,32 +565,32 @@ package.preload["nvim-local-fennel.aniseed.fennel.specials"] = package.preload["
   doc_special(".", {"tbl", "key1", "..."}, "Look up key1 in tbl table. If more args are provided, do a nested lookup.")
   SPECIALS.global = function(ast, scope, parent)
     compiler.assert((#ast == 3), "expected name and value", ast)
-    compiler.destructure(ast[2], ast[3], ast, scope, parent, {forceglobal = true, nomulti = true})
+    compiler.destructure(ast[2], ast[3], ast, scope, parent, {forceglobal = true, nomulti = true, symtype = "global"})
     return nil
   end
   doc_special("global", {"name", "val"}, "Set name as a global with val.")
   SPECIALS.set = function(ast, scope, parent)
     compiler.assert((#ast == 3), "expected name and value", ast)
-    compiler.destructure(ast[2], ast[3], ast, scope, parent, {noundef = true})
+    compiler.destructure(ast[2], ast[3], ast, scope, parent, {noundef = true, symtype = "set"})
     return nil
   end
   doc_special("set", {"name", "val"}, "Set a local variable to a new value. Only works on locals using var.")
   local function set_forcibly_21_2a(ast, scope, parent)
     compiler.assert((#ast == 3), "expected name and value", ast)
-    compiler.destructure(ast[2], ast[3], ast, scope, parent, {forceset = true})
+    compiler.destructure(ast[2], ast[3], ast, scope, parent, {forceset = true, symtype = "set"})
     return nil
   end
   SPECIALS["set-forcibly!"] = set_forcibly_21_2a
   local function local_2a(ast, scope, parent)
     compiler.assert((#ast == 3), "expected name and value", ast)
-    compiler.destructure(ast[2], ast[3], ast, scope, parent, {declaration = true, nomulti = true})
+    compiler.destructure(ast[2], ast[3], ast, scope, parent, {declaration = true, nomulti = true, symtype = "local"})
     return nil
   end
   SPECIALS["local"] = local_2a
   doc_special("local", {"name", "val"}, "Introduce new top-level immutable local.")
   SPECIALS.var = function(ast, scope, parent)
     compiler.assert((#ast == 3), "expected name and value", ast)
-    compiler.destructure(ast[2], ast[3], ast, scope, parent, {declaration = true, isvar = true, nomulti = true})
+    compiler.destructure(ast[2], ast[3], ast, scope, parent, {declaration = true, isvar = true, nomulti = true, symtype = "var"})
     return nil
   end
   doc_special("var", {"name", "val"}, "Introduce new mutable local.")
@@ -606,7 +606,7 @@ package.preload["nvim-local-fennel.aniseed.fennel.specials"] = package.preload["
     local sub_scope = compiler["make-scope"](scope)
     local sub_chunk = {}
     for i = 1, #bindings, 2 do
-      compiler.destructure(bindings[i], bindings[(i + 1)], ast, sub_scope, sub_chunk, {declaration = true, nomulti = true})
+      compiler.destructure(bindings[i], bindings[(i + 1)], ast, sub_scope, sub_chunk, {declaration = true, nomulti = true, symtype = "let"})
     end
     return SPECIALS["do"](ast, scope, parent, opts, 3, sub_chunk, sub_scope, pre_syms)
   end
@@ -757,7 +757,7 @@ package.preload["nvim-local-fennel.aniseed.fennel.specials"] = package.preload["
     local chunk = {}
     compiler.emit(parent, ("for %s in %s do"):format(table.concat(bind_vars, ", "), table.concat(val_names, ", ")), ast)
     for raw, args in utils.stablepairs(destructures) do
-      compiler.destructure(args, raw, ast, sub_scope, chunk, {declaration = true, nomulti = true})
+      compiler.destructure(args, raw, ast, sub_scope, chunk, {declaration = true, nomulti = true, symtype = "each"})
     end
     compiler["apply-manglings"](sub_scope, new_manglings, ast)
     compile_do(ast, sub_scope, chunk, 3)
@@ -1127,11 +1127,12 @@ package.preload["nvim-local-fennel.aniseed.fennel.specials"] = package.preload["
     return find_in_path(1)
   end
   local function make_searcher(options)
-    local opts = utils.copy(utils.root.options)
-    for k, v in pairs((options or {})) do
-      opts[k] = v
-    end
     local function _1_(module_name)
+      local opts = utils.copy(utils.root.options)
+      for k, v in pairs((options or {})) do
+        opts[k] = v
+      end
+      opts["module-name"] = module_name
       local _2_0 = search_module(module_name)
       if (nil ~= _2_0) then
         local filename = _2_0
@@ -1177,9 +1178,12 @@ package.preload["nvim-local-fennel.aniseed.fennel.specials"] = package.preload["
     end
     return nil
   end
-  SPECIALS["require-macros"] = function(ast, scope, parent)
-    compiler.assert((#ast == 2), "Expected one module name argument", ast)
-    local modname = ast[2]
+  SPECIALS["require-macros"] = function(ast, scope, parent, real_ast)
+    compiler.assert((#ast == 2), "Expected one module name argument", (real_ast or ast))
+    local filename = (ast[2].filename or ast.filename)
+    local modname_code = compiler.compile(ast[2])
+    local modname = load_code(modname_code, nil, filename)(utils.root.options["module-name"], filename)
+    compiler.assert((type(modname) == "string"), "module name must compile to string", (real_ast or ast))
     if not macro_loaded[modname] then
       local env = make_compiler_env(ast, scope, parent)
       macro_loaded[modname] = compiler_env_domodule(modname, env, ast)
@@ -1187,7 +1191,7 @@ package.preload["nvim-local-fennel.aniseed.fennel.specials"] = package.preload["
     return add_macros(macro_loaded[modname], ast, scope, parent)
   end
   doc_special("require-macros", {"macro-module-name"}, "Load given module and use its contents as macro definitions in current scope.\nMacro module should return a table of macro functions with string keys.\nConsider using import-macros instead as it is more flexible.")
-  local function emit_fennel(src, path, opts, sub_chunk)
+  local function emit_included_fennel(src, path, opts, sub_chunk)
     local subscope = compiler["make-scope"](utils.root.scope.parent)
     local forms = {}
     if utils.root.options.requireAsInclude then
@@ -1199,7 +1203,7 @@ package.preload["nvim-local-fennel.aniseed.fennel.specials"] = package.preload["
     for i = 1, #forms do
       local subopts = nil
       if (i == #forms) then
-        subopts = {nval = 1, tail = true}
+        subopts = {tail = true}
       else
         subopts = {nval = 0}
       end
@@ -1237,7 +1241,7 @@ package.preload["nvim-local-fennel.aniseed.fennel.specials"] = package.preload["
       table.insert(utils.root.chunk, i, v)
     end
     if fennel_3f then
-      emit_fennel(src, path, opts, sub_chunk)
+      emit_included_fennel(src, path, opts, sub_chunk)
     else
       compiler.emit(sub_chunk, src, ast)
     end
@@ -1287,7 +1291,7 @@ package.preload["nvim-local-fennel.aniseed.fennel.specials"] = package.preload["
     local opts = utils.copy(utils.root.options)
     opts.scope = compiler["make-scope"](compiler.scopes.compiler)
     opts.allowedGlobals = macro_globals(env, current_global_names())
-    return load_code(compiler.compile(ast, opts), wrap_env(env))()
+    return load_code(compiler.compile(ast, opts), wrap_env(env))(opts["module-name"], ast.filename)
   end
   SPECIALS.macros = function(ast, scope, parent)
     compiler.assert((#ast == 2), "Expected one table argument", ast)
@@ -1463,6 +1467,7 @@ package.preload["nvim-local-fennel.aniseed.fennel.compiler"] = package.preload["
   end
   local function check_binding_valid(symbol, scope, ast)
     local name = utils.deref(symbol)
+    assert_compile(not name:find("&"), "illegal character: &", symbol)
     assert_compile(not (scope.specials[name] or scope.macros[name]), ("local %s was overshadowed by a special form or macro"):format(name), ast)
     return assert_compile(not utils["quoted?"](symbol), string.format("macro tried to bind %s without gensym", name), symbol)
   end
@@ -1900,6 +1905,8 @@ package.preload["nvim-local-fennel.aniseed.fennel.compiler"] = package.preload["
     local isvar = _0_["isvar"]
     local nomulti = _0_["nomulti"]
     local noundef = _0_["noundef"]
+    local symtype = _0_["symtype"]
+    local symtype0 = ("_" .. (symtype or "dst"))
     local setter = nil
     if declaration then
       setter = "local %s = %s"
@@ -1959,38 +1966,53 @@ package.preload["nvim-local-fennel.aniseed.fennel.compiler"] = package.preload["
       end
       return ret
     end
-    local function destructure1(left, rightexprs, up1, top_3f)
-      if (utils["sym?"](left) and (left[1] ~= "nil")) then
-        local lname = getname(left, up1)
-        check_binding_valid(left, scope, left)
+    local function destructure_sym(left, rightexprs, up1, top_3f)
+      local lname = getname(left, up1)
+      check_binding_valid(left, scope, left)
+      if top_3f then
+        compile_top_target({lname})
+      else
+        emit(parent, setter:format(lname, exprs1(rightexprs)), left)
+      end
+      if declaration then
+        scope.symmeta[utils.deref(left)] = {var = isvar}
+        return nil
+      end
+    end
+    local function destructure_table(left, rightexprs, top_3f, destructure1)
+      local s = gensym(scope, symtype0)
+      local right = nil
+      do
+        local _2_0 = nil
         if top_3f then
-          compile_top_target({lname})
+          _2_0 = exprs1(compile1(from, scope, parent))
         else
-          emit(parent, setter:format(lname, exprs1(rightexprs)), left)
+          _2_0 = exprs1(rightexprs)
         end
-        if declaration then
-          scope.symmeta[utils.deref(left)] = {var = isvar}
-        end
-      elseif utils["table?"](left) then
-        local s = gensym(scope)
-        local right = nil
-        if top_3f then
-          right = exprs1(compile1(from, scope, parent))
-        else
-          right = exprs1(rightexprs)
-        end
-        if (right == "") then
+        if (_2_0 == "") then
           right = "nil"
+        elseif (nil ~= _2_0) then
+          local right0 = _2_0
+          right = right0
+        else
+        right = nil
         end
-        emit(parent, string.format("local %s = %s", s, right), left)
-        for k, v in utils.stablepairs(left) do
-          if (utils["sym?"](left[k]) and (left[k][1] == "&")) then
-            assert_compile(((type(k) == "number") and not left[(k + 2)]), "expected rest argument before last parameter", left)
+      end
+      emit(parent, string.format("local %s = %s", s, right), left)
+      for k, v in utils.stablepairs(left) do
+        if not (("number" == type(k)) and tostring(left[(k - 1)]):find("^&")) then
+          if (utils["sym?"](v) and (utils.deref(v) == "&")) then
             local unpack_str = "{(table.unpack or unpack)(%s, %s)}"
             local formatted = string.format(unpack_str, s, k)
             local subexpr = utils.expr(formatted, "expression")
+            assert_compile((utils["sequence?"](left) and (nil == left[(k + 2)])), "expected rest argument before last parameter", left)
             destructure1(left[(k + 1)], {subexpr}, left)
-            return
+          elseif (utils["sym?"](k) and (utils.deref(k) == "&as")) then
+            destructure_sym(v, {utils.expr(tostring(s))}, left)
+          elseif (utils["sequence?"](left) and (utils.deref(v) == "&as")) then
+            local _, next_sym, trailing = select(k, unpack(left))
+            assert_compile((nil == trailing), "expected &as argument before last parameter", left)
+            destructure_sym(next_sym, {utils.expr(tostring(s))}, left)
           else
             local key = nil
             if (type(k) == "string") then
@@ -2002,27 +2024,39 @@ package.preload["nvim-local-fennel.aniseed.fennel.compiler"] = package.preload["
             destructure1(v, {subexpr}, left)
           end
         end
+      end
+      return nil
+    end
+    local function destructure_values(left, up1, top_3f, destructure1)
+      local left_names, tables = {}, {}
+      for i, name in ipairs(left) do
+        if utils["sym?"](name) then
+          table.insert(left_names, getname(name, up1))
+        else
+          local symname = gensym(scope, symtype0)
+          table.insert(left_names, symname)
+          tables[i] = {name, utils.expr(symname, "sym")}
+        end
+      end
+      assert_compile(top_3f, "can't nest multi-value destructuring", left)
+      compile_top_target(left_names)
+      if declaration then
+        for _, sym in ipairs(left) do
+          scope.symmeta[utils.deref(sym)] = {var = isvar}
+        end
+      end
+      for _, pair in utils.stablepairs(tables) do
+        destructure1(pair[1], {pair[2]}, left)
+      end
+      return nil
+    end
+    local function destructure1(left, rightexprs, up1, top_3f)
+      if (utils["sym?"](left) and (left[1] ~= "nil")) then
+        destructure_sym(left, rightexprs, up1, top_3f)
+      elseif utils["table?"](left) then
+        destructure_table(left, rightexprs, top_3f, destructure1)
       elseif utils["list?"](left) then
-        local left_names, tables = {}, {}
-        for i, name in ipairs(left) do
-          if utils["sym?"](name) then
-            table.insert(left_names, getname(name, up1))
-          else
-            local symname = gensym(scope)
-            table.insert(left_names, symname)
-            tables[i] = {name, utils.expr(symname, "sym")}
-          end
-        end
-        assert_compile(top_3f, "can't nest multi-value destructuring", left)
-        compile_top_target(left_names)
-        if declaration then
-          for _, sym in ipairs(left) do
-            scope.symmeta[utils.deref(sym)] = {var = isvar}
-          end
-        end
-        for _, pair in utils.stablepairs(tables) do
-          destructure1(pair[1], {pair[2]}, left)
-        end
+        destructure_values(left, up1, top_3f, destructure1)
       else
         assert_compile(false, string.format("unable to bind %s %s", type(left), tostring(left)), (((type(up1[2]) == "table") and up1[2]) or up1))
       end
@@ -2240,11 +2274,7 @@ end
 package.preload["nvim-local-fennel.aniseed.fennel.friend"] = package.preload["nvim-local-fennel.aniseed.fennel.friend"] or function(...)
   local function ast_source(ast)
     local m = getmetatable(ast)
-    if (m and m.line and m) then
-      return m
-    else
-      return ast
-    end
+    return ((m and m.line and m) or ast or {})
   end
   local suggestions = {["$ and $... in hashfn are mutually exclusive"] = {"modifying the hashfn so it only contains $... or $, $1, $2, $3, etc"}, ["can't start multisym segment with a digit"] = {"removing the digit", "adding a non-digit before the digit"}, ["cannot call literal value"] = {"checking for typos", "checking for a missing function name"}, ["could not compile value of type "] = {"debugging the macro you're calling not to return a coroutine or userdata"}, ["could not read number (.*)"] = {"removing the non-digit character", "beginning the identifier with a non-digit if it is not meant to be a number"}, ["expected a function.* to call"] = {"removing the empty parentheses", "using square brackets if you want an empty table"}, ["expected binding table"] = {"placing a table here in square brackets containing identifiers to bind"}, ["expected body expression"] = {"putting some code in the body of this form after the bindings"}, ["expected each macro to be function"] = {"ensuring that the value for each key in your macros table contains a function", "avoid defining nested macro tables"}, ["expected even number of name/value bindings"] = {"finding where the identifier or value is missing"}, ["expected even number of values in table literal"] = {"removing a key", "adding a value"}, ["expected local"] = {"looking for a typo", "looking for a local which is used out of its scope"}, ["expected macros to be table"] = {"ensuring your macro definitions return a table"}, ["expected parameters"] = {"adding function parameters as a list of identifiers in brackets"}, ["expected rest argument before last parameter"] = {"moving & to right before the final identifier when destructuring"}, ["expected symbol for function parameter: (.*)"] = {"changing %s to an identifier instead of a literal value"}, ["expected var (.*)"] = {"declaring %s using var instead of let/local", "introducing a new local instead of changing the value of %s"}, ["expected vararg as last parameter"] = {"moving the \"...\" to the end of the parameter list"}, ["expected whitespace before opening delimiter"] = {"adding whitespace"}, ["global (.*) conflicts with local"] = {"renaming local %s"}, ["illegal character: (.)"] = {"deleting or replacing %s", "avoiding reserved characters like \", \\, ', ~, ;, @, `, and comma"}, ["local (.*) was overshadowed by a special form or macro"] = {"renaming local %s"}, ["macro not found in macro module"] = {"checking the keys of the imported macro module's returned table"}, ["macro tried to bind (.*) without gensym"] = {"changing to %s# when introducing identifiers inside macros"}, ["malformed multisym"] = {"ensuring each period or colon is not followed by another period or colon"}, ["may only be used at compile time"] = {"moving this to inside a macro if you need to manipulate symbols/lists", "using square brackets instead of parens to construct a table"}, ["method must be last component"] = {"using a period instead of a colon for field access", "removing segments after the colon", "making the method call, then looking up the field on the result"}, ["mismatched closing delimiter (.), expected (.)"] = {"replacing %s with %s", "deleting %s", "adding matching opening delimiter earlier"}, ["multisym method calls may only be in call position"] = {"using a period instead of a colon to reference a table's fields", "putting parens around this"}, ["unable to bind (.*)"] = {"replacing the %s with an identifier"}, ["unexpected closing delimiter (.)"] = {"deleting %s", "adding matching opening delimiter earlier"}, ["unexpected multi symbol (.*)"] = {"removing periods or colons from %s"}, ["unexpected vararg"] = {"putting \"...\" at the end of the fn parameters if the vararg was intended"}, ["unknown global in strict mode: (.*)"] = {"looking to see if there's a typo", "using the _G table instead, eg. _G.%s if you really want a global", "moving this code to somewhere that %s is in scope", "binding %s as a local in the scope of this code"}, ["unused local (.*)"] = {"fixing a typo so %s is used", "renaming the local to _%s"}, ["use of global (.*) is aliased by a local"] = {"renaming local %s", "refer to the global using _G.%s instead of directly"}}
   local unpack = (_G.unpack or table.unpack)
@@ -2376,7 +2406,7 @@ package.preload["nvim-local-fennel.aniseed.fennel.parser"] = package.preload["nv
     return _0_, _1_
   end
   local function string_stream(str)
-    local str0 = str:gsub("^#![^\n]*\n", "")
+    local str0 = str:gsub("^#!", ";;")
     local index = 1
     local function _0_()
       local r = str0:byte(index)
@@ -2582,9 +2612,8 @@ package.preload["nvim-local-fennel.aniseed.fennel.parser"] = package.preload["nv
         end
       end
       local function parse_number(rawstr)
-        local force_number = rawstr:match("^%d")
-        local number_with_stripped_underscores = rawstr:gsub("_", "")
-        if force_number then
+        local number_with_stripped_underscores = (not rawstr:find("^_") and rawstr:gsub("_", ""))
+        if rawstr:match("^%d") then
           dispatch((tonumber(number_with_stripped_underscores) or parse_error(("could not read number \"" .. rawstr .. "\""))))
           return true
         else
@@ -3066,6 +3095,45 @@ do
       `(let ,closable-bindings ,closer
             (close-handlers# (xpcall ,bodyfn ,traceback)))))
   
+  (fn collect [iter-tbl key-value-expr]
+    "Returns a table made by running an iterator and evaluating an expression
+  that returns key-value pairs to be inserted sequentially into the table.
+  This can be thought of as a \"table comprehension\". The provided key-value
+  expression must return either 2 values, or nil.
+  
+  For example,
+    (collect [k v (pairs {:apple \"red\" :orange \"orange\"})]
+      (values v k))
+  returns
+    {:red \"apple\" :orange \"orange\"}"
+    (assert (and (sequence? iter-tbl) (>= (length iter-tbl) 2))
+            "expected iterator binding table")
+    (assert (not= nil key-value-expr)
+            "expected key-value expression")
+    `(let [tbl# {}]
+       (each ,iter-tbl
+         (match ,key-value-expr
+           (k# v#) (tset tbl# k# v#)))
+       tbl#))
+  
+  (fn icollect [iter-tbl value-expr]
+    "Returns a sequential table made by running an iterator and evaluating an
+  expression that returns values to be inserted sequentially into the table.
+  This can be thought of as a \"list comprehension\".
+  
+  For example,
+    (icollect [_ v (ipairs [1 2 3 4 5])] (when (> v 2) (* v v)))
+  returns
+    [9 16 25]"
+    (assert (and (sequence? iter-tbl) (>= (length iter-tbl) 2))
+            "expected iterator binding table")
+    (assert (not= nil value-expr)
+            "expected table value expression")
+    `(let [tbl# []]
+       (each ,iter-tbl
+         (tset tbl# (+ (length tbl#) 1) ,value-expr))
+       tbl#))
+  
   (fn partial [f ...]
     "Returns a function with all arguments partially applied to f."
     (let [body (list f ...)]
@@ -3137,7 +3205,7 @@ do
     "Define a single macro."
     (assert (sym? name) "expected symbol for macro name")
     (local args [...])
-    `(macros { ,(tostring name) (fn ,name ,(unpack args))}))
+    `(macros { ,(tostring name) (fn ,(unpack args))}))
   
   (fn macrodebug [form return?]
     "Print the resulting form after performing macroexpansion.
@@ -3160,10 +3228,8 @@ do
             ;; to bring in macro module. after that, we just copy the
             ;; macros from subscope to scope.
             scope (get-scope)
-            subscope (fennel.scope scope)
-            opts {:scope subscope}]
-        (each [k v (pairs  utils.root.options)] (tset opts k v))
-        (fennel.compile-string (string.format "(require-macros %q)" modname) opts)
+            subscope (fennel.scope scope)]
+        (_SPECIALS.require-macros `(require-macros ,modname) subscope {} ast)
         (if (sym? binding)
             ;; bind whole table of macros to table bound to symbol
             (do (tset scope.macros (. binding 1) {})
@@ -3174,7 +3240,8 @@ do
             (table? binding)
             (each [macro-name [import-key] (pairs binding)]
               (assert (= :function (type (. subscope.macros macro-name)))
-                      (.. "macro " macro-name " not found in module " modname))
+                      (.. "macro " macro-name " not found in module "
+                          (tostring modname)))
               (tset scope.macros import-key (. subscope.macros macro-name))))))
     nil)
   
@@ -3290,6 +3357,7 @@ do
   
   {: -> : ->> : -?> : -?>>
    : doto : when : with-open
+   : collect : icollect
    : partial : lambda
    : pick-args : pick-values
    : macro : macrodebug : import-macros

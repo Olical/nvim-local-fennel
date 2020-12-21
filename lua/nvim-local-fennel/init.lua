@@ -14,12 +14,12 @@ do
   package.loaded[name_0_] = module_0_
   _0_0 = module_0_
 end
-local function _2_(...)
+local function _1_(...)
   local ok_3f_0_, val_0_ = nil, nil
-  local function _2_()
+  local function _1_()
     return {require("nvim-local-fennel.aniseed.core"), require("nvim-local-fennel.aniseed.compile"), require("nvim-local-fennel.aniseed.nvim")}
   end
-  ok_3f_0_, val_0_ = pcall(_2_)
+  ok_3f_0_, val_0_ = pcall(_1_)
   if ok_3f_0_ then
     _0_0["aniseed/local-fns"] = {require = {a = "nvim-local-fennel.aniseed.core", compile = "nvim-local-fennel.aniseed.compile", nvim = "nvim-local-fennel.aniseed.nvim"}}
     return val_0_
@@ -27,10 +27,10 @@ local function _2_(...)
     return print(val_0_)
   end
 end
-local _1_ = _2_(...)
-local a = _1_[1]
-local compile = _1_[2]
-local nvim = _1_[3]
+local _local_0_ = _1_(...)
+local a = _local_0_[1]
+local compile = _local_0_[2]
+local nvim = _local_0_[3]
 local _2amodule_2a = _0_0
 local _2amodule_name_2a = "nvim-local-fennel.init"
 do local _ = ({nil, _0_0, {{}, nil, nil, nil}})[2] end
@@ -86,7 +86,7 @@ end
 local cwd0 = cwd()
 local dirs = parents(cwd0)
 table.insert(dirs, cwd0)
-local function _3_(dir)
+local function _2_(dir)
   local src = (dir .. "/.lnvim.fnl")
   local dest = (dir .. "/.lnvim.lua")
   if file_readable_3f(src) then
@@ -98,4 +98,4 @@ local function _3_(dir)
     end
   end
 end
-return a["run!"](_3_, dirs)
+return a["run!"](_2_, dirs)
