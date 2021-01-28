@@ -9,8 +9,8 @@ do
     module_0_ = {}
   end
   module_0_["aniseed/module"] = name_0_
-  module_0_["aniseed/locals"] = (module_0_["aniseed/locals"] or {})
-  module_0_["aniseed/local-fns"] = (module_0_["aniseed/local-fns"] or {})
+  module_0_["aniseed/locals"] = ((module_0_)["aniseed/locals"] or {})
+  module_0_["aniseed/local-fns"] = ((module_0_)["aniseed/local-fns"] or {})
   package.loaded[name_0_] = module_0_
   _0_0 = module_0_
 end
@@ -35,22 +35,6 @@ local nvim = _local_0_[4]
 local _2amodule_2a = _0_0
 local _2amodule_name_2a = "nvim-local-fennel.aniseed.compile"
 do local _ = ({nil, _0_0, {{}, nil, nil, nil}})[2] end
-local add_path = nil
-do
-  local v_0_ = nil
-  do
-    local v_0_0 = nil
-    local function add_path0(path)
-      fennel.path = (fennel.path .. ";" .. path)
-      return nil
-    end
-    v_0_0 = add_path0
-    _0_0["add-path"] = v_0_0
-    v_0_ = v_0_0
-  end
-  _0_0["aniseed/locals"]["add-path"] = v_0_
-  add_path = v_0_
-end
 local macros_prefix = nil
 do
   local v_0_ = nil
@@ -64,7 +48,8 @@ do
     _0_0["macros-prefix"] = v_0_0
     v_0_ = v_0_0
   end
-  _0_0["aniseed/locals"]["macros-prefix"] = v_0_
+  local t_0_ = (_0_0)["aniseed/locals"]
+  t_0_["macros-prefix"] = v_0_
   macros_prefix = v_0_
 end
 local str = nil
@@ -82,7 +67,8 @@ do
     _0_0["str"] = v_0_0
     v_0_ = v_0_0
   end
-  _0_0["aniseed/locals"]["str"] = v_0_
+  local t_0_ = (_0_0)["aniseed/locals"]
+  t_0_["str"] = v_0_
   str = v_0_
 end
 local file = nil
@@ -108,7 +94,8 @@ do
     _0_0["file"] = v_0_0
     v_0_ = v_0_0
   end
-  _0_0["aniseed/locals"]["file"] = v_0_
+  local t_0_ = (_0_0)["aniseed/locals"]
+  t_0_["file"] = v_0_
   file = v_0_
 end
 local glob = nil
@@ -134,7 +121,8 @@ do
     _0_0["glob"] = v_0_0
     v_0_ = v_0_0
   end
-  _0_0["aniseed/locals"]["glob"] = v_0_
+  local t_0_ = (_0_0)["aniseed/locals"]
+  t_0_["glob"] = v_0_
   glob = v_0_
 end
 return nil

@@ -41,7 +41,8 @@ do
     return nvim.fn.getcwd()
   end
   v_0_ = cwd0
-  _0_0["aniseed/locals"]["cwd"] = v_0_
+  local t_0_ = _0_0["aniseed/locals"]
+  t_0_["cwd"] = v_0_
   cwd = v_0_
 end
 local parent = nil
@@ -54,7 +55,8 @@ do
     end
   end
   v_0_ = parent0
-  _0_0["aniseed/locals"]["parent"] = v_0_
+  local t_0_ = _0_0["aniseed/locals"]
+  t_0_["parent"] = v_0_
   parent = v_0_
 end
 local parents = nil
@@ -70,7 +72,8 @@ do
     return result
   end
   v_0_ = parents0
-  _0_0["aniseed/locals"]["parents"] = v_0_
+  local t_0_ = _0_0["aniseed/locals"]
+  t_0_["parents"] = v_0_
   parents = v_0_
 end
 local file_readable_3f = nil
@@ -80,7 +83,8 @@ do
     return (1 == nvim.fn.filereadable(path))
   end
   v_0_ = file_readable_3f0
-  _0_0["aniseed/locals"]["file-readable?"] = v_0_
+  local t_0_ = _0_0["aniseed/locals"]
+  t_0_["file-readable?"] = v_0_
   file_readable_3f = v_0_
 end
 local cwd0 = cwd()
