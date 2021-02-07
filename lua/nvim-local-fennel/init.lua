@@ -1,16 +1,18 @@
 local _0_0 = nil
 do
   local name_0_ = "nvim-local-fennel.init"
-  local loaded_0_ = package.loaded[name_0_]
   local module_0_ = nil
-  if ("table" == type(loaded_0_)) then
-    module_0_ = loaded_0_
-  else
-    module_0_ = {}
+  do
+    local x_0_ = package.loaded[name_0_]
+    if ("table" == type(x_0_)) then
+      module_0_ = x_0_
+    else
+      module_0_ = {}
+    end
   end
   module_0_["aniseed/module"] = name_0_
-  module_0_["aniseed/locals"] = (module_0_["aniseed/locals"] or {})
-  module_0_["aniseed/local-fns"] = (module_0_["aniseed/local-fns"] or {})
+  module_0_["aniseed/locals"] = ((module_0_)["aniseed/locals"] or {})
+  module_0_["aniseed/local-fns"] = ((module_0_)["aniseed/local-fns"] or {})
   package.loaded[name_0_] = module_0_
   _0_0 = module_0_
 end
@@ -41,7 +43,7 @@ do
     return nvim.fn.getcwd()
   end
   v_0_ = cwd0
-  local t_0_ = _0_0["aniseed/locals"]
+  local t_0_ = (_0_0)["aniseed/locals"]
   t_0_["cwd"] = v_0_
   cwd = v_0_
 end
@@ -55,7 +57,7 @@ do
     end
   end
   v_0_ = parent0
-  local t_0_ = _0_0["aniseed/locals"]
+  local t_0_ = (_0_0)["aniseed/locals"]
   t_0_["parent"] = v_0_
   parent = v_0_
 end
@@ -72,7 +74,7 @@ do
     return result
   end
   v_0_ = parents0
-  local t_0_ = _0_0["aniseed/locals"]
+  local t_0_ = (_0_0)["aniseed/locals"]
   t_0_["parents"] = v_0_
   parents = v_0_
 end
@@ -83,7 +85,7 @@ do
     return (1 == nvim.fn.filereadable(path))
   end
   v_0_ = file_readable_3f0
-  local t_0_ = _0_0["aniseed/locals"]
+  local t_0_ = (_0_0)["aniseed/locals"]
   t_0_["file-readable?"] = v_0_
   file_readable_3f = v_0_
 end
