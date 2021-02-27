@@ -14,7 +14,7 @@ Use your favourite plugin manager, I highly recommend https://github.com/junegun
 
 [source,viml]
 ----
-Plug 'Olical/nvim-local-fennel', { 'tag': 'v2.7.0' }
+Plug 'Olical/nvim-local-fennel', { 'tag': 'v2.8.0' }
 Plug 'bakpakin/fennel.vim'
 ----
 
