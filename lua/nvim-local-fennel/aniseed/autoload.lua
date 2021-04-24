@@ -1,6 +1,6 @@
 local _0_0
 do
-  local name_0_ = "nvim-local-fennel.aniseed.fs"
+  local name_0_ = "nvim-local-fennel.aniseed.autoload"
   local module_0_
   do
     local x_0_ = package.loaded[name_0_]
@@ -20,51 +20,41 @@ local autoload = (require("nvim-local-fennel.aniseed.autoload")).autoload
 local function _1_(...)
   local ok_3f_0_, val_0_ = nil, nil
   local function _1_()
-    return {autoload("nvim-local-fennel.aniseed.nvim")}
+    return {}
   end
   ok_3f_0_, val_0_ = pcall(_1_)
   if ok_3f_0_ then
-    _0_0["aniseed/local-fns"] = {autoload = {nvim = "nvim-local-fennel.aniseed.nvim"}}
+    _0_0["aniseed/local-fns"] = {}
     return val_0_
   else
     return print(val_0_)
   end
 end
 local _local_0_ = _1_(...)
-local nvim = _local_0_[1]
 local _2amodule_2a = _0_0
-local _2amodule_name_2a = "nvim-local-fennel.aniseed.fs"
+local _2amodule_name_2a = "nvim-local-fennel.aniseed.autoload"
 do local _ = ({nil, _0_0, nil, {{}, nil, nil, nil}})[2] end
-local basename
+local autoload0
 do
   local v_0_
   do
     local v_0_0
-    local function basename0(path)
-      return nvim.fn.fnamemodify(path, ":h")
+    local function autoload1(name)
+      local function _2_(t, k)
+        return require(name)[k]
+      end
+      local function _3_(t, k, v)
+        require(name)[k] = v
+        return nil
+      end
+      return setmetatable({["aniseed/autoload?"] = true}, {__index = _2_, __newindex = _3_})
     end
-    v_0_0 = basename0
-    _0_0["basename"] = v_0_0
+    v_0_0 = autoload1
+    _0_0["autoload"] = v_0_0
     v_0_ = v_0_0
   end
   local t_0_ = (_0_0)["aniseed/locals"]
-  t_0_["basename"] = v_0_
-  basename = v_0_
-end
-local mkdirp
-do
-  local v_0_
-  do
-    local v_0_0
-    local function mkdirp0(dir)
-      return nvim.fn.mkdir(dir, "p")
-    end
-    v_0_0 = mkdirp0
-    _0_0["mkdirp"] = v_0_0
-    v_0_ = v_0_0
-  end
-  local t_0_ = (_0_0)["aniseed/locals"]
-  t_0_["mkdirp"] = v_0_
-  mkdirp = v_0_
+  t_0_["autoload"] = v_0_
+  autoload0 = v_0_
 end
 return nil

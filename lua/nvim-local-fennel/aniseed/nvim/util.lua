@@ -1,7 +1,7 @@
-local _0_0 = nil
+local _0_0
 do
   local name_0_ = "nvim-local-fennel.aniseed.nvim.util"
-  local module_0_ = nil
+  local module_0_
   do
     local x_0_ = package.loaded[name_0_]
     if ("table" == type(x_0_)) then
@@ -16,14 +16,15 @@ do
   package.loaded[name_0_] = module_0_
   _0_0 = module_0_
 end
+local autoload = (require("nvim-local-fennel.aniseed.autoload")).autoload
 local function _1_(...)
   local ok_3f_0_, val_0_ = nil, nil
   local function _1_()
-    return {require("nvim-local-fennel.aniseed.nvim")}
+    return {autoload("nvim-local-fennel.aniseed.nvim")}
   end
   ok_3f_0_, val_0_ = pcall(_1_)
   if ok_3f_0_ then
-    _0_0["aniseed/local-fns"] = {require = {nvim = "nvim-local-fennel.aniseed.nvim"}}
+    _0_0["aniseed/local-fns"] = {autoload = {nvim = "nvim-local-fennel.aniseed.nvim"}}
     return val_0_
   else
     return print(val_0_)
@@ -33,12 +34,12 @@ local _local_0_ = _1_(...)
 local nvim = _local_0_[1]
 local _2amodule_2a = _0_0
 local _2amodule_name_2a = "nvim-local-fennel.aniseed.nvim.util"
-do local _ = ({nil, _0_0, {{}, nil, nil, nil}})[2] end
-local normal = nil
+do local _ = ({nil, _0_0, nil, {{}, nil, nil, nil}})[2] end
+local normal
 do
-  local v_0_ = nil
+  local v_0_
   do
-    local v_0_0 = nil
+    local v_0_0
     local function normal0(keys)
       return nvim.ex.silent(("exe \"normal! " .. keys .. "\""))
     end
@@ -50,11 +51,11 @@ do
   t_0_["normal"] = v_0_
   normal = v_0_
 end
-local fn_bridge = nil
+local fn_bridge
 do
-  local v_0_ = nil
+  local v_0_
   do
-    local v_0_0 = nil
+    local v_0_0
     local function fn_bridge0(viml_name, mod, lua_name, opts)
       local _let_0_ = (opts or {})
       local range = _let_0_["range"]
@@ -87,11 +88,11 @@ do
   t_0_["fn-bridge"] = v_0_
   fn_bridge = v_0_
 end
-local with_out_str = nil
+local with_out_str
 do
-  local v_0_ = nil
+  local v_0_
   do
-    local v_0_0 = nil
+    local v_0_0
     local function with_out_str0(f)
       nvim.ex.redir("=> g:aniseed_nvim_util_out_str")
       do

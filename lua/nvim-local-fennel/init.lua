@@ -1,7 +1,7 @@
-local _0_0 = nil
+local _0_0
 do
   local name_0_ = "nvim-local-fennel.init"
-  local module_0_ = nil
+  local module_0_
   do
     local x_0_ = package.loaded[name_0_]
     if ("table" == type(x_0_)) then
@@ -16,14 +16,15 @@ do
   package.loaded[name_0_] = module_0_
   _0_0 = module_0_
 end
+local autoload = (require("aniseed.autoload")).autoload
 local function _1_(...)
   local ok_3f_0_, val_0_ = nil, nil
   local function _1_()
-    return {require("nvim-local-fennel.aniseed.core"), require("nvim-local-fennel.aniseed.compile"), require("nvim-local-fennel.aniseed.nvim")}
+    return {autoload("nvim-local-fennel.aniseed.core"), autoload("nvim-local-fennel.aniseed.compile"), autoload("nvim-local-fennel.aniseed.nvim")}
   end
   ok_3f_0_, val_0_ = pcall(_1_)
   if ok_3f_0_ then
-    _0_0["aniseed/local-fns"] = {require = {a = "nvim-local-fennel.aniseed.core", compile = "nvim-local-fennel.aniseed.compile", nvim = "nvim-local-fennel.aniseed.nvim"}}
+    _0_0["aniseed/local-fns"] = {autoload = {a = "nvim-local-fennel.aniseed.core", compile = "nvim-local-fennel.aniseed.compile", nvim = "nvim-local-fennel.aniseed.nvim"}}
     return val_0_
   else
     return print(val_0_)
@@ -35,10 +36,10 @@ local compile = _local_0_[2]
 local nvim = _local_0_[3]
 local _2amodule_2a = _0_0
 local _2amodule_name_2a = "nvim-local-fennel.init"
-do local _ = ({nil, _0_0, {{}, nil, nil, nil}})[2] end
-local cwd = nil
+do local _ = ({nil, _0_0, nil, {{}, nil, nil, nil}})[2] end
+local cwd
 do
-  local v_0_ = nil
+  local v_0_
   local function cwd0()
     return nvim.fn.getcwd()
   end
@@ -47,9 +48,9 @@ do
   t_0_["cwd"] = v_0_
   cwd = v_0_
 end
-local parent = nil
+local parent
 do
-  local v_0_ = nil
+  local v_0_
   local function parent0(dir)
     local candidate = nvim.fn.fnamemodify(dir, ":h")
     if ((dir ~= candidate) and nvim.fn.isdirectory(candidate)) then
@@ -61,9 +62,9 @@ do
   t_0_["parent"] = v_0_
   parent = v_0_
 end
-local parents = nil
+local parents
 do
-  local v_0_ = nil
+  local v_0_
   local function parents0(dir)
     local result = {}
     local dir0 = parent(dir)
@@ -78,9 +79,9 @@ do
   t_0_["parents"] = v_0_
   parents = v_0_
 end
-local file_readable_3f = nil
+local file_readable_3f
 do
-  local v_0_ = nil
+  local v_0_
   local function file_readable_3f0(path)
     return (1 == nvim.fn.filereadable(path))
   end

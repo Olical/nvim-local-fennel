@@ -1,7 +1,7 @@
-local _0_0 = nil
+local _0_0
 do
   local name_0_ = "nvim-local-fennel.aniseed.eval"
-  local module_0_ = nil
+  local module_0_
   do
     local x_0_ = package.loaded[name_0_]
     if ("table" == type(x_0_)) then
@@ -16,14 +16,15 @@ do
   package.loaded[name_0_] = module_0_
   _0_0 = module_0_
 end
+local autoload = (require("nvim-local-fennel.aniseed.autoload")).autoload
 local function _1_(...)
   local ok_3f_0_, val_0_ = nil, nil
   local function _1_()
-    return {require("nvim-local-fennel.aniseed.core"), require("nvim-local-fennel.aniseed.compile"), require("nvim-local-fennel.aniseed.fennel"), require("nvim-local-fennel.aniseed.fs"), require("nvim-local-fennel.aniseed.nvim")}
+    return {autoload("nvim-local-fennel.aniseed.core"), autoload("nvim-local-fennel.aniseed.compile"), autoload("nvim-local-fennel.aniseed.fennel"), autoload("nvim-local-fennel.aniseed.fs"), autoload("nvim-local-fennel.aniseed.nvim")}
   end
   ok_3f_0_, val_0_ = pcall(_1_)
   if ok_3f_0_ then
-    _0_0["aniseed/local-fns"] = {require = {a = "nvim-local-fennel.aniseed.core", compile = "nvim-local-fennel.aniseed.compile", fennel = "nvim-local-fennel.aniseed.fennel", fs = "nvim-local-fennel.aniseed.fs", nvim = "nvim-local-fennel.aniseed.nvim"}}
+    _0_0["aniseed/local-fns"] = {autoload = {a = "nvim-local-fennel.aniseed.core", compile = "nvim-local-fennel.aniseed.compile", fennel = "nvim-local-fennel.aniseed.fennel", fs = "nvim-local-fennel.aniseed.fs", nvim = "nvim-local-fennel.aniseed.nvim"}}
     return val_0_
   else
     return print(val_0_)
@@ -37,12 +38,12 @@ local fs = _local_0_[4]
 local nvim = _local_0_[5]
 local _2amodule_2a = _0_0
 local _2amodule_name_2a = "nvim-local-fennel.aniseed.eval"
-do local _ = ({nil, _0_0, {{}, nil, nil, nil}})[2] end
-local str = nil
+do local _ = ({nil, _0_0, nil, {{}, nil, nil, nil}})[2] end
+local str
 do
-  local v_0_ = nil
+  local v_0_
   do
-    local v_0_0 = nil
+    local v_0_0
     local function str0(code, opts)
       local function _2_()
         return fennel.eval(compile["macros-prefix"](code), a.merge({["compiler-env"] = _G}, opts))

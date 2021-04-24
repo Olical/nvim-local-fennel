@@ -1,7 +1,7 @@
 (module nvim-local-fennel.init
-  {require {compile nvim-local-fennel.aniseed.compile
-            nvim nvim-local-fennel.aniseed.nvim
-            a nvim-local-fennel.aniseed.core}})
+  {autoload {compile nvim-local-fennel.aniseed.compile
+             nvim nvim-local-fennel.aniseed.nvim
+             a nvim-local-fennel.aniseed.core}})
 
 (defn- cwd []
   "Current working directory of Neovim."
