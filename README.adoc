@@ -15,7 +15,7 @@ Use your favourite plugin manager, I highly recommend https://github.com/junegun
 [source,viml]
 ----
 Plug 'Olical/nvim-local-fennel', { 'tag': 'v2.8.0' }
-Plug 'bakpakin/fennel.vim'
+Plug 'Olical/aniseed'
 ----
 
 If you want interactive evaluation of the forms in your `.lnvim.fnl` file you can install https://github.com/Olical/conjure[Conjure] too.
@@ -29,9 +29,9 @@ Aniseed is embedded under the `nvim-local-fennel.aniseed.*` module prefix, this 
 ;; .lnvim.fnl
 ;; You can give the module any name you want.
 (module my-local-fennel
-  {require {a nvim-local-fennel.aniseed.core
-            str nvim-local-fennel.aniseed.string
-            nvim nvim-local-fennel.aniseed.nvim}})
+  {autoload {a nvim-local-fennel.aniseed.core
+             str nvim-local-fennel.aniseed.string
+             nvim nvim-local-fennel.aniseed.nvim}})
 
 ;; A hyphen suffix denotes a private function.
 (defn- do-some-things [numbers]
