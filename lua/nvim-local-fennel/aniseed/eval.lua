@@ -45,10 +45,11 @@ do
   do
     local v_0_0
     local function str0(code, opts)
+      local fnl = fennel.impl()
       local function _2_()
-        return fennel.eval(compile["macros-prefix"](code), a.merge({["compiler-env"] = _G}, opts))
+        return fnl.eval(compile["macros-prefix"](code), a.merge({["compiler-env"] = _G}, opts))
       end
-      return xpcall(_2_, fennel.traceback)
+      return xpcall(_2_, fnl.traceback)
     end
     v_0_0 = str0
     _0_0["str"] = v_0_0
