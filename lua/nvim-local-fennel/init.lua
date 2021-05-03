@@ -1,3 +1,4 @@
+local _2afile_2a = "fnl/nvim-local-fennel/init.fnl"
 local _0_0
 do
   local name_0_ = "nvim-local-fennel.init"
