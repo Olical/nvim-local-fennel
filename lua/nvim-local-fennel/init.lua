@@ -91,13 +91,24 @@ do
   t_0_["file-readable?"] = v_0_
   file_readable_3f = v_0_
 end
+local file_newer_3f
+do
+  local v_0_
+  local function file_newer_3f0(a0, b)
+    return (nvim.fn.getftime(a0) > nvim.fn.getftime(b))
+  end
+  v_0_ = file_newer_3f0
+  local t_0_ = (_0_0)["aniseed/locals"]
+  t_0_["file-newer?"] = v_0_
+  file_newer_3f = v_0_
+end
 local cwd0 = cwd()
 local dirs = parents(cwd0)
 table.insert(dirs, cwd0)
 local function _2_(dir)
   local src = (dir .. "/.lnvim.fnl")
   local dest = (dir .. "/.lnvim.lua")
-  if file_readable_3f(src) then
+  if (file_readable_3f(src) and file_newer_3f(src, dest)) then
     compile.file(src, dest)
     return nvim.ex.luafile(dest)
   else

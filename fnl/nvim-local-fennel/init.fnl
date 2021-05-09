@@ -27,6 +27,9 @@
   "Is the file readable?"
   (= 1 (nvim.fn.filereadable path)))
 
+(defn- file-newer? [a b]
+  (> (nvim.fn.getftime a) (nvim.fn.getftime b)))
+
 ;; Iterate over all directories from the root to the cwd.
 ;; For every .lnvim.fnl, compile it to .lvim.lua (if required) and execute it.
 ;; If a .lua is found without a .fnl, delete the .lua to clean up.
@@ -37,7 +40,7 @@
     (fn [dir]
       (let [src (.. dir "/.lnvim.fnl")
             dest (.. dir "/.lnvim.lua")]
-        (if (file-readable? src)
+        (if (and (file-readable? src) (file-newer? src dest))
           (do
             (compile.file src dest)
             (nvim.ex.luafile dest))
