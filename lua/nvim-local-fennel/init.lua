@@ -108,8 +108,10 @@ table.insert(dirs, cwd0)
 local function _2_(dir)
   local src = (dir .. "/.lnvim.fnl")
   local dest = (dir .. "/.lnvim.lua")
-  if (file_readable_3f(src) and file_newer_3f(src, dest)) then
-    compile.file(src, dest)
+  if file_readable_3f(src) then
+    if file_newer_3f(src, dest) then
+      compile.file(src, dest)
+    end
     return nvim.ex.luafile(dest)
   else
     if file_readable_3f(dest) then

@@ -40,9 +40,10 @@
     (fn [dir]
       (let [src (.. dir "/.lnvim.fnl")
             dest (.. dir "/.lnvim.lua")]
-        (if (and (file-readable? src) (file-newer? src dest))
+        (if (file-readable? src)
           (do
-            (compile.file src dest)
+            (when (file-newer? src dest)
+              (compile.file src dest))
             (nvim.ex.luafile dest))
           (when (file-readable? dest)
             (nvim.fn.delete dest)))))
