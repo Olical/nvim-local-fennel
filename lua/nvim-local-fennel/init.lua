@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/nvim-local-fennel/init.fnl"
-local _0_0
+local _0_
 do
   local name_0_ = "nvim-local-fennel.init"
   local module_0_
@@ -15,7 +15,7 @@ do
   module_0_["aniseed/locals"] = ((module_0_)["aniseed/locals"] or {})
   module_0_["aniseed/local-fns"] = ((module_0_)["aniseed/local-fns"] or {})
   package.loaded[name_0_] = module_0_
-  _0_0 = module_0_
+  _0_ = module_0_
 end
 local autoload = (require("nvim-local-fennel.aniseed.autoload")).autoload
 local function _1_(...)
@@ -25,7 +25,7 @@ local function _1_(...)
   end
   ok_3f_0_, val_0_ = pcall(_1_)
   if ok_3f_0_ then
-    _0_0["aniseed/local-fns"] = {autoload = {a = "nvim-local-fennel.aniseed.core", compile = "nvim-local-fennel.aniseed.compile", nvim = "nvim-local-fennel.aniseed.nvim"}}
+    _0_["aniseed/local-fns"] = {autoload = {a = "nvim-local-fennel.aniseed.core", compile = "nvim-local-fennel.aniseed.compile", nvim = "nvim-local-fennel.aniseed.nvim"}}
     return val_0_
   else
     return print(val_0_)
@@ -35,9 +35,9 @@ local _local_0_ = _1_(...)
 local a = _local_0_[1]
 local compile = _local_0_[2]
 local nvim = _local_0_[3]
-local _2amodule_2a = _0_0
+local _2amodule_2a = _0_
 local _2amodule_name_2a = "nvim-local-fennel.init"
-do local _ = ({nil, _0_0, nil, {{}, nil, nil, nil}})[2] end
+do local _ = ({nil, _0_, nil, {{}, nil, nil, nil}})[2] end
 local cwd
 do
   local v_0_
@@ -45,7 +45,7 @@ do
     return nvim.fn.getcwd()
   end
   v_0_ = cwd0
-  local t_0_ = (_0_0)["aniseed/locals"]
+  local t_0_ = (_0_)["aniseed/locals"]
   t_0_["cwd"] = v_0_
   cwd = v_0_
 end
@@ -59,7 +59,7 @@ do
     end
   end
   v_0_ = parent0
-  local t_0_ = (_0_0)["aniseed/locals"]
+  local t_0_ = (_0_)["aniseed/locals"]
   t_0_["parent"] = v_0_
   parent = v_0_
 end
@@ -76,7 +76,7 @@ do
     return result
   end
   v_0_ = parents0
-  local t_0_ = (_0_0)["aniseed/locals"]
+  local t_0_ = (_0_)["aniseed/locals"]
   t_0_["parents"] = v_0_
   parents = v_0_
 end
@@ -87,7 +87,7 @@ do
     return (1 == nvim.fn.filereadable(path))
   end
   v_0_ = file_readable_3f0
-  local t_0_ = (_0_0)["aniseed/locals"]
+  local t_0_ = (_0_)["aniseed/locals"]
   t_0_["file-readable?"] = v_0_
   file_readable_3f = v_0_
 end
@@ -98,7 +98,7 @@ do
     return (nvim.fn.getftime(a0) > nvim.fn.getftime(b))
   end
   v_0_ = file_newer_3f0
-  local t_0_ = (_0_0)["aniseed/locals"]
+  local t_0_ = (_0_)["aniseed/locals"]
   t_0_["file-newer?"] = v_0_
   file_newer_3f = v_0_
 end
