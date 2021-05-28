@@ -13,17 +13,21 @@ do
   end
   module_0_["aniseed/module"] = name_0_
   module_0_["aniseed/locals"] = ((module_0_)["aniseed/locals"] or {})
-  module_0_["aniseed/local-fns"] = ((module_0_)["aniseed/local-fns"] or {})
-  package.loaded[name_0_] = module_0_
+  do end (module_0_)["aniseed/local-fns"] = ((module_0_)["aniseed/local-fns"] or {})
+  do end (package.loaded)[name_0_] = module_0_
   _0_ = module_0_
 end
-local autoload = (require("nvim-local-fennel.aniseed.autoload")).autoload
+local autoload
 local function _1_(...)
+  return (require("nvim-local-fennel.aniseed.autoload")).autoload(...)
+end
+autoload = _1_
+local function _2_(...)
   local ok_3f_0_, val_0_ = nil, nil
-  local function _1_()
+  local function _2_()
     return {autoload("nvim-local-fennel.aniseed.core"), autoload("nvim-local-fennel.aniseed.compile"), autoload("nvim-local-fennel.aniseed.nvim")}
   end
-  ok_3f_0_, val_0_ = pcall(_1_)
+  ok_3f_0_, val_0_ = pcall(_2_)
   if ok_3f_0_ then
     _0_["aniseed/local-fns"] = {autoload = {a = "nvim-local-fennel.aniseed.core", compile = "nvim-local-fennel.aniseed.compile", nvim = "nvim-local-fennel.aniseed.nvim"}}
     return val_0_
@@ -31,7 +35,7 @@ local function _1_(...)
     return print(val_0_)
   end
 end
-local _local_0_ = _1_(...)
+local _local_0_ = _2_(...)
 local a = _local_0_[1]
 local compile = _local_0_[2]
 local nvim = _local_0_[3]
@@ -105,7 +109,7 @@ end
 local cwd0 = cwd()
 local dirs = parents(cwd0)
 table.insert(dirs, cwd0)
-local function _2_(dir)
+local function _3_(dir)
   local src = (dir .. "/.lnvim.fnl")
   local dest = (dir .. "/.lnvim.lua")
   if file_readable_3f(src) then
@@ -119,4 +123,4 @@ local function _2_(dir)
     end
   end
 end
-return a["run!"](_2_, dirs)
+return a["run!"](_3_, dirs)

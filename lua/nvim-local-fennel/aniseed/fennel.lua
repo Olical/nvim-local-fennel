@@ -13,17 +13,21 @@ do
   end
   module_0_["aniseed/module"] = name_0_
   module_0_["aniseed/locals"] = ((module_0_)["aniseed/locals"] or {})
-  module_0_["aniseed/local-fns"] = ((module_0_)["aniseed/local-fns"] or {})
-  package.loaded[name_0_] = module_0_
+  do end (module_0_)["aniseed/local-fns"] = ((module_0_)["aniseed/local-fns"] or {})
+  do end (package.loaded)[name_0_] = module_0_
   _0_ = module_0_
 end
-local autoload = (require("nvim-local-fennel.aniseed.autoload")).autoload
+local autoload
 local function _1_(...)
+  return (require("nvim-local-fennel.aniseed.autoload")).autoload(...)
+end
+autoload = _1_
+local function _2_(...)
   local ok_3f_0_, val_0_ = nil, nil
-  local function _1_()
+  local function _2_()
     return {autoload("nvim-local-fennel.aniseed.nvim")}
   end
-  ok_3f_0_, val_0_ = pcall(_1_)
+  ok_3f_0_, val_0_ = pcall(_2_)
   if ok_3f_0_ then
     _0_["aniseed/local-fns"] = {autoload = {nvim = "nvim-local-fennel.aniseed.nvim"}}
     return val_0_
@@ -31,7 +35,7 @@ local function _1_(...)
     return print(val_0_)
   end
 end
-local _local_0_ = _1_(...)
+local _local_0_ = _2_(...)
 local nvim = _local_0_[1]
 local _2amodule_2a = _0_
 local _2amodule_name_2a = "nvim-local-fennel.aniseed.fennel"
@@ -46,7 +50,7 @@ do
       local rtp = nvim.o.runtimepath
       local fnl_path = (rtp:gsub(",", (fnl_suffix .. ";")) .. fnl_suffix)
       local lua_path = fnl_path:gsub("/fnl/", "/lua/")
-      compiler["path"] = (fnl_path .. ";" .. lua_path)
+      do end (compiler)["path"] = (fnl_path .. ";" .. lua_path)
       return nil
     end
     v_0_0 = sync_rtp0
@@ -92,7 +96,7 @@ do
     local v_0_0
     local function add_path0(path)
       local fnl = impl()
-      fnl["path"] = (fnl.path .. ";" .. path)
+      do end (fnl)["path"] = (fnl.path .. ";" .. path)
       return nil
     end
     v_0_0 = add_path0
