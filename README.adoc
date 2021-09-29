@@ -14,7 +14,7 @@ Use your favourite plugin manager, I highly recommend https://github.com/junegun
 
 [source,viml]
 ----
-Plug 'Olical/nvim-local-fennel', { 'tag': 'v2.12.2' }
+Plug 'Olical/nvim-local-fennel', { 'tag': 'v2.13.0' }
 Plug 'Olical/aniseed'
 ----
 
