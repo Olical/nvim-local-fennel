@@ -1,3 +1,2 @@
-*.fnl linguist-language=Lisp
 lua/* linguist-generated
 lua/aniseed linguist-vendored
