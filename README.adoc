@@ -10,15 +10,23 @@ Aniseed will only re-compile the Fennel code if it's changed since last time you
 
 == Installation
 
-Use your favourite plugin manager, I highly recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one already. Be sure to pin it to a tag and subscribe to releases through GitHub.
+If you want interactive evaluation of the forms in your `.lnvim.fnl` file you can install https://github.com/Olical/conjure[Conjure] too.
+
+=== https://github.com/wbthomason/packer.nvim[packer.nvim]
+
+[source,lua]
+----
+use 'Olical/nvim-local-fennel'
+use 'Olical/aniseed'
+----
+
+=== https://github.com/junegunn/vim-plug[vim-plug]
 
 [source,viml]
 ----
-Plug 'Olical/nvim-local-fennel', { 'tag': 'v2.14.0' }
+Plug 'Olical/nvim-local-fennel'
 Plug 'Olical/aniseed'
 ----
-
-If you want interactive evaluation of the forms in your `.lnvim.fnl` file you can install https://github.com/Olical/conjure[Conjure] too.
 
 == Access to Aniseed
 
