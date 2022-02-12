@@ -46,24 +46,27 @@ local function file_newer_3f(a0, b)
   return (nvim.fn.getftime(a0) > nvim.fn.getftime(b))
 end
 _2amodule_locals_2a["file-newer?"] = file_newer_3f
-local cwd0 = cwd()
-local dirs = parents(cwd0)
-table.insert(dirs, cwd0)
-local function _2_(dir)
-  local src = (dir .. "/.lnvim.fnl")
-  local dest = (dir .. "/.lnvim.lua")
-  if file_readable_3f(src) then
-    if file_newer_3f(src, dest) then
-      compile.file(src, dest)
+do
+  local cwd0 = cwd()
+  local dirs = parents(cwd0)
+  table.insert(dirs, cwd0)
+  local function _2_(dir)
+    local src = (dir .. "/.lnvim.fnl")
+    local dest = (dir .. "/.lnvim.lua")
+    if file_readable_3f(src) then
+      if file_newer_3f(src, dest) then
+        compile.file(src, dest)
+      else
+      end
+      return nvim.ex.luafile(dest)
     else
-    end
-    return nvim.ex.luafile(dest)
-  else
-    if file_readable_3f(dest) then
-      return nvim.fn.delete(dest)
-    else
-      return nil
+      if file_readable_3f(dest) then
+        return nvim.fn.delete(dest)
+      else
+        return nil
+      end
     end
   end
+  a["run!"](_2_, dirs)
 end
-return a["run!"](_2_, dirs)
+return _2amodule_2a
