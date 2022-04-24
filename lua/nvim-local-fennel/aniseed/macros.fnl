@@ -103,7 +103,7 @@
         keys []
         vals []
         => (fn [k v]
-             (table.insert keys (sym k))
+             (table.insert keys k)
              (table.insert vals v))]
 
     ;; For each function / value pair...
@@ -113,12 +113,12 @@
           (if (seq? args)
             ;; If it's sequential, we execute the fn for side effects.
             (each [_ arg (ipairs args)]
-              (=> :_ `(,mod-fn ,(tostring arg))))
+              (=> (sym :_) `(,mod-fn ,(tostring arg))))
 
             ;; Otherwise we need to bind the execution to a name.
             (sorted-each
               (fn [bind arg]
-                (=> (tostring bind) `(,mod-fn ,(tostring arg))))
+                (=> bind `(,mod-fn ,(tostring arg))))
               args)))
          mod-fns)
 
@@ -175,10 +175,10 @@
     (tset ,mod-sym ,(tostring name) ,name)])
 
 (fn defonce- [name value]
-  `(def- ,name (or ,name ,value)))
+  `(def- ,name (or (. ,mod-sym ,(tostring name)) ,value)))
 
 (fn defonce [name value]
-  `(def ,name (or ,name ,value)))
+  `(def ,name (or (. ,mod-sym ,(tostring name)) ,value)))
 
 (fn deftest [name ...]
   `(let [tests# (or (. ,mod-sym :aniseed/tests
