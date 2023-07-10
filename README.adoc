@@ -1,5 +1,13 @@
 = nvim-local-fennel
 
+____
+This has been superseded! I now recommend installing https://github.com/Olical/nfnl[Olical/nfnl] and enabling the `exrc` option in order to have https://github.com/Olical/nfnl#directory-local-neovim-configuration-in-fennel[directory local Neovim configuration in Fennel].
+
+Once you have nfnl and a `.nfnl.fnl` file at the root of your project you can write to `.nvim.fnl` and have `.nvim.lua` compiled for you automatically. This file is loaded by native Neovim with zero plugins provided you have `:set exrc` enabled.
+
+This means even colleagues that don't have nfnl installed can use your directory local configuration. Consider this repo as essentially archived and superseded by this much smoother approach.
+____
+
 Run https://github.com/bakpakin/Fennel[Fennel] inside Neovim on startup with https://github.com/Olical/aniseed[Aniseed].
 
 Add some Fennel code such as `(print "Hello, World!")` to a file named `.lnvim.fnl` in your current directory or anywhere above it such as your home directory. A file will be created beside the `.fnl` called `.lnvim.lua` which will be executed upon startup. Files higher up in your directory hierarchy, such as the home directory, will be executed before those found lower down, such as in a project.
